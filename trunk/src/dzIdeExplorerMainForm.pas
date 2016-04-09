@@ -573,6 +573,7 @@ var
   FrmItem: TTreeNode;
   HasFrmChanged: boolean;
   Found: Boolean;
+  ParentForm: TCustomForm;
 begin
   if FSelecting then
     exit;
@@ -599,9 +600,14 @@ begin
       FillTree;
     if not Assigned(FVclForms) then
       Exit;
+
+    if Assigned(ActCtrl) then
+      ParentForm := GetParentForm(ActCtrl, False)
+    else
+      ParentForm := ActForm;
     for i := 0 to FVclForms.Count - 1 do begin
       FrmItem := FVclForms.Item[i];
-      if FrmItem.Data = ActForm then begin
+      if FrmItem.Data = ParentForm then begin
         FrmItem.Selected := True;
         FrmItem.Expand(False);
         FLastActiveForm := FrmItem.Data;
