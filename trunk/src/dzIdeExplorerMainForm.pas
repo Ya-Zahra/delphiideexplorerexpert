@@ -24,12 +24,11 @@ uses
   ImgList,
   StdCtrls,
   Menus,
-// Imagelist is not used by Delphi 2007 but probably by some later versions
-// todo: add a conditional define
-//  ImageList,
+// Imagelist is new in Delphi 10 Seattle, for older verions
+// add a unit alias as ImageList=Controls
+  ImageList,
   dzIdeExplorerClassInformation,
-  dzIdeExplorerEventHook,
-  System.ImageList;
+  dzIdeExplorerEventHook;
 
 type
   TExplorerForm = class(TForm)
@@ -563,6 +562,16 @@ procedure TExplorerForm.SelectFocused(_Force: Boolean);
     end;
   end;
 
+  function doGetParentForm(_ctrl: TControl): TCustomForm;
+  begin
+{$IFDEF Delphi2005_up}
+    Result := GetParentForm(_ctrl, False)
+{$ELSE}
+    // GetParentForm did not yet have the boolean parameter
+    Result := GetParentForm(_ctrl);
+{$ENDIF}
+  end;
+
 var
   i: Integer;
   ActForm: TForm;
@@ -602,7 +611,7 @@ begin
       Exit;
 
     if Assigned(ActCtrl) then
-      ParentForm := GetParentForm(ActCtrl, False)
+      ParentForm := doGetParentForm(ActCtrl)
     else
       ParentForm := ActForm;
     for i := 0 to FVclForms.Count - 1 do begin
