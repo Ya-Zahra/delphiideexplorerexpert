@@ -56,6 +56,10 @@ function TWinControl_ActivateDropFiles(_WinCtrl: TWinControl; _Callback: TOnFile
 
 implementation
 
+{$IFDEF SUPPORTS_PLATFORM_WARNINGS}
+{$WARN UNIT_PLATFORM OFF}
+{$ENDIF}
+
 uses
   Consts,
   Messages,
@@ -386,4 +390,3 @@ begin
 end;
 
 end.
-
