@@ -44,7 +44,9 @@ contains
   dzIdeExplorerMainForm in '..\..\src\dzIdeExplorerMainForm.pas' {ExplorerForm},
   dzIdeExplorerUtils in '..\..\src\dzIdeExplorerUtils.pas',
   dzIdeExplorerVCL in '..\..\src\dzIdeExplorerVCL.pas',
-  dzIdeExplorerFMX in '..\..\src\dzIdeExplorerFMX.pas';
+  dzIdeExplorerFMX in '..\..\src\dzIdeExplorerFMX.pas',
+  dzIdeExplorerEventHook in '..\..\src\dzIdeExplorerEventHook.pas',
+  dzIdeExplorerdzVclUtils in '..\..\src\dzIdeExplorerdzVclUtils.pas';
 
 end.
 

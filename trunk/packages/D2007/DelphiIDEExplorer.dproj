@@ -18,7 +18,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <Version>7.0</Version>
     <DCC_Define>nodzFmxSupport;DEBUG</DCC_Define>
-    <DCC_UnitAlias>WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;VCL.Forms=Forms;System.Classes=Classes;VCL.StdCtrls=StdCtrls;VCL.Menus=Menus;VCL.Buttons=Buttons;VCL.Dialogs=Dialogs;VCL.ActnList=ActnList;VCL.ExtCtrls=ExtCtrls;System.SysUtils=SysUtils;WinApi.Windows=Windows;Winapi.Messages=Messages;VCL.Graphics=Graphics;VCL.Controls=Controls;VCL.ComCtrls=ComCtrls;VCL.ImgList=ImgList;System.TypInfo=TypInfo;System.Variants=Variants;System.Win.Registry=Registry;System.StrUtils=StrUtils;System.Rtti=Rtti;System.Types=Types;System.Contnrs=Contnrs</DCC_UnitAlias>
+    <DCC_UnitAlias>WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;VCL.Forms=Forms;System.Classes=Classes;VCL.StdCtrls=StdCtrls;VCL.Menus=Menus;VCL.Buttons=Buttons;VCL.Dialogs=Dialogs;VCL.ActnList=ActnList;VCL.ExtCtrls=ExtCtrls;System.SysUtils=SysUtils;WinApi.Windows=Windows;Winapi.Messages=Messages;VCL.Graphics=Graphics;VCL.Controls=Controls;VCL.ComCtrls=ComCtrls;VCL.ImgList=ImgList;System.TypInfo=TypInfo;System.Variants=Variants;System.Win.Registry=Registry;System.StrUtils=StrUtils;System.Rtti=Rtti;System.Types=Types;System.Contnrs=Contnrs;ImageList=Controls</DCC_UnitAlias>
     <DCC_DcuOutput>.\dcu</DCC_DcuOutput>
     <DCC_ObjOutput>.\dcu</DCC_ObjOutput>
     <DCC_HppOutput>.\dcu</DCC_HppOutput>

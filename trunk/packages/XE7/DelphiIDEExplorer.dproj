@@ -51,6 +51,7 @@
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
+        <DCC_UnitAlias>ImageList=Controls;$(DCC_UnitAlias)</DCC_UnitAlias>
         <DllSuffix>210</DllSuffix>
         <DCC_OutputNeverBuildDcps>true</DCC_OutputNeverBuildDcps>
         <GenPackage>true</GenPackage>
