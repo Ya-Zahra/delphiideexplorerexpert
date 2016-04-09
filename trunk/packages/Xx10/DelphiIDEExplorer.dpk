@@ -1,0 +1,52 @@
+package DelphiIDEExplorer;
+
+{$R *.res}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO ON}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS OFF}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION OFF}
+{$OVERFLOWCHECKS ON}
+{$RANGECHECKS ON}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES ON}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST ON}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DEFINE DEBUG}
+{$ENDIF IMPLICITBUILDING}
+{$DESCRIPTION 'dummzeuch.de Delphi IDE Explorer'}
+{$LIBSUFFIX '230'}
+{$DESIGNONLY}
+{$IMPLICITBUILD OFF}
+
+requires
+  Vcl,
+  FMX,
+  DesignIde;
+
+contains
+  dzIdeExplorerExpert in '..\..\src\dzIdeExplorerExpert.pas',
+  dzIdeExplorerReg in '..\..\src\dzIdeExplorerReg.pas',
+  dzIdeExplorerMenuTree in '..\..\src\dzIdeExplorerMenuTree.pas' {f_IdeExplorerMenuTree},
+  dzIdeExplorerFilterForm in '..\..\src\dzIdeExplorerFilterForm.pas' {f_IdeExplorerFilterForm},
+  dzIdeExplorerClassInformation in '..\..\src\dzIdeExplorerClassInformation.pas',
+  dzIdeExplorerMainForm in '..\..\src\dzIdeExplorerMainForm.pas' {ExplorerForm},
+  dzIdeExplorerUtils in '..\..\src\dzIdeExplorerUtils.pas',
+  dzIdeExplorerVCL in '..\..\src\dzIdeExplorerVCL.pas',
+  dzIdeExplorerFMX in '..\..\src\dzIdeExplorerFMX.pas',
+  dzIdeExplorerdzVclUtils in '..\..\src\dzIdeExplorerdzVclUtils.pas',
+  dzIdeExplorerEventHook in '..\..\src\dzIdeExplorerEventHook.pas';
+
+end.
+
