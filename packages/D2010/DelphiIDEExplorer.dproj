@@ -36,7 +36,7 @@
 			<DCC_OutputNeverBuildDcps>true</DCC_OutputNeverBuildDcps>
 			<DCC_DcuOutput>.\dcu</DCC_DcuOutput>
 			<DCC_K>false</DCC_K>
-			<DCC_UnitAlias>WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;VCL.Forms=Forms;System.Classes=Classes;VCL.StdCtrls=StdCtrls;VCL.Menus=Menus;VCL.Buttons=Buttons;VCL.Dialogs=Dialogs;VCL.ActnList=ActnList;VCL.ExtCtrls=ExtCtrls;System.SysUtils=SysUtils;WinApi.Windows=Windows;Winapi.Messages=Messages;VCL.Graphics=Graphics;VCL.Controls=Controls;VCL.ComCtrls=ComCtrls;VCL.ImgList=ImgList;System.TypInfo=TypInfo;System.Variants=Variants;System.Win.Registry=Registry;System.StrUtils=StrUtils;System.Rtti=Rtti;System.Types=Types;$(DCC_UnitAlias)</DCC_UnitAlias>
+			<DCC_UnitAlias>WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;VCL.Forms=Forms;System.Classes=Classes;VCL.StdCtrls=StdCtrls;VCL.Menus=Menus;VCL.Buttons=Buttons;VCL.Dialogs=Dialogs;VCL.ActnList=ActnList;VCL.ExtCtrls=ExtCtrls;System.SysUtils=SysUtils;WinApi.Windows=Windows;Winapi.Messages=Messages;VCL.Graphics=Graphics;VCL.Controls=Controls;VCL.ComCtrls=ComCtrls;VCL.ImgList=ImgList;System.TypInfo=TypInfo;System.Variants=Variants;System.Win.Registry=Registry;System.StrUtils=StrUtils;System.Rtti=Rtti;System.Types=Types;ImageList=Controls;$(DCC_UnitAlias)</DCC_UnitAlias>
 			<DCC_E>false</DCC_E>
 			<DCC_Description>dummzeuch.de Delphi IDE Explorer</DCC_Description>
 			<DCC_N>false</DCC_N>
