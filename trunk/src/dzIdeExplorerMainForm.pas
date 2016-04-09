@@ -58,7 +58,6 @@ type
     chk_Follow: TCheckBox;
     ts_Parent: TTabSheet;
     tv_Parents: TTreeView;
-    tim_EnableWindow: TTimer;
     b_SelectActive: TButton;
     procedure FormShow(Sender: TObject);
     procedure tv_FormsChange(Sender: TObject; Node: TTreeNode);
@@ -71,7 +70,6 @@ type
     procedure mi_ShowClick(Sender: TObject);
     procedure b_UpdateClick(Sender: TObject);
     procedure chk_FollowClick(Sender: TObject);
-    procedure tim_EnableWindowTimer(Sender: TObject);
     procedure b_SelectActiveClick(Sender: TObject);
   private
     FSelecting: Boolean;
@@ -544,7 +542,7 @@ end;
 
 procedure TExplorerForm.SelectFocused(_Force: Boolean);
 
-  procedure SelectFocusedControl(_ActCtrl: TWinControl; _Parent: TTreeNode);
+  procedure SelectFocusedControl(_ActCtrl: TWinControl; _Parent: TTreeNode; var _Found: boolean);
   var
     CtrlItem: TTreeNode;
   begin
@@ -552,10 +550,15 @@ procedure TExplorerForm.SelectFocused(_Force: Boolean);
     while Assigned(CtrlItem) do begin
       if CtrlItem.Data = _ActCtrl then begin
         CtrlItem.Selected := true;
+        CtrlItem.MakeVisible;
         FLastActiveControl := CtrlItem.Data;
-        break;
-      end else if TObject(CtrlItem.Data) is TWinControl then
-        SelectFocusedControl(_ActCtrl, CtrlItem);
+        _Found := True;
+        exit;
+      end else if TObject(CtrlItem.Data) is TWinControl then begin
+        SelectFocusedControl(_ActCtrl, CtrlItem, _Found);
+        if _Found then
+          exit;
+      end;
       CtrlItem := CtrlItem.getNextSibling;
     end;
   end;
@@ -569,6 +572,7 @@ var
   ActCtrl: TWinControl;
   FrmItem: TTreeNode;
   HasFrmChanged: boolean;
+  Found: Boolean;
 begin
   if FSelecting then
     exit;
@@ -603,7 +607,8 @@ begin
         FLastActiveForm := FrmItem.Data;
         if Assigned(ActCtrl) then begin
           if ActCtrl <> FrmItem.Data then begin
-            SelectFocusedControl(ActCtrl, FrmItem);
+            Found := False;
+            SelectFocusedControl(ActCtrl, FrmItem, Found);
           end;
         end;
         break;
@@ -613,11 +618,6 @@ begin
     tv_Forms.Items.EndUpdate;
     FSelecting := False;
   end;
-end;
-
-procedure TExplorerForm.tim_EnableWindowTimer(Sender: TObject);
-begin
-  EnableWindow(Self.Handle, True);
 end;
 
 procedure TExplorerForm.tv_FormsChange(Sender: TObject; Node: TTreeNode);

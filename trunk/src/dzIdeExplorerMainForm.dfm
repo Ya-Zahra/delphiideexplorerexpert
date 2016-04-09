@@ -888,10 +888,4 @@ object ExplorerForm: TExplorerForm
       OnClick = mi_ShowClick
     end
   end
-  object tim_EnableWindow: TTimer
-    Enabled = False
-    OnTimer = tim_EnableWindowTimer
-    Left = 280
-    Top = 160
-  end
 end
