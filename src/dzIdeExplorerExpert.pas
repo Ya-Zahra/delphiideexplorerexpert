@@ -64,8 +64,9 @@ implementation
 uses
   SysUtils,
   Graphics,
+  Controls,
   dzIdeExplorerVcl,
-  dzIdeExplorerdzVclUtils, Controls;
+  dzIdeExplorerdzVclUtils;
 
 { TDGHIDEExplorer Class Methods }
 
