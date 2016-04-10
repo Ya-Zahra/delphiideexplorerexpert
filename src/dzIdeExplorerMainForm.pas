@@ -76,7 +76,6 @@ type
     FFollowFocusEnabled: Boolean;
     FActiveDelphiForm: TForm;
     FActiveDelphiControl: TWinControl;
-    FActiveFormChangedHook: TNotifyEventHook;
   private
     FLastActiveForm: TForm;
     FLastActiveControl: TWinControl;
@@ -85,7 +84,7 @@ type
     procedure FillTree;
     procedure SelectFocused(_Force: Boolean);
     procedure HandleOnActiveControlChange(Sender: TObject);
-    procedure HandleOnActiveFormChange(Sender: TObject);
+    procedure WMEnable(var _Msg: TWMEnable); message WM_ENABLE;
   public
     constructor Create(_Owner: TComponent); override;
     destructor Destroy; override;
@@ -154,8 +153,6 @@ end;
 
 destructor TExplorerForm.Destroy;
 begin
-  if Assigned(FActiveFormChangedHook) then
-    UnhookScreenActiveFormChange(FActiveFormChangedHook);
   if Assigned(FActiveControlChangedHook) then
     UnhookScreenActiveControlChange(FActiveControlChangedHook);
   FreeAndNil(FClassInfo);
@@ -195,13 +192,10 @@ end;
 
 procedure TExplorerForm.FormShow(Sender: TObject);
 begin
-  if Assigned(FActiveFormChangedHook) then
-    UnhookScreenActiveFormChange(FActiveFormChangedHook);
   if Assigned(FActiveControlChangedHook) then
     UnhookScreenActiveControlChange(FActiveControlChangedHook);
   FillTree;
   FActiveControlChangedHook := HookScreenActiveControlChange(HandleOnActiveControlChange);
-  FActiveFormChangedHook := HookScreenActiveFormChange(HandleOnActiveFormChange)
 end;
 
 procedure TExplorerForm.b_SelectActiveClick(Sender: TObject);
@@ -218,13 +212,25 @@ procedure TExplorerForm.chk_FollowClick(Sender: TObject);
 begin
   FFollowFocusEnabled := chk_Follow.Checked;
   if FFollowFocusEnabled then begin
-    SelectFocused(true);
+    SelectFocused(True);
   end;
 end;
 
-procedure TExplorerForm.HandleOnActiveFormChange(Sender: TObject);
+function CheckModalLevel: Boolean;
 begin
-  EnableWindow(Self.Handle, True);
+{$IFDEF DELPHI2005_UP}
+  Result := (Application.ModalLevel > 0);
+{$ELSE}
+  // Delphi <2005 does not have Applicaton.ModalLevel, so we always return true
+  Result := True;
+{$ENDIF}
+end;
+
+procedure TExplorerForm.WMEnable(var _Msg: TWMEnable);
+begin
+  inherited;
+  if not _Msg.Enabled and CheckModalLevel then
+    EnableWindow(Self.Handle, True);
 end;
 
 type
@@ -541,14 +547,14 @@ end;
 
 procedure TExplorerForm.SelectFocused(_Force: Boolean);
 
-  procedure SelectFocusedControl(_ActCtrl: TWinControl; _Parent: TTreeNode; var _Found: boolean);
+  procedure SelectFocusedControl(_ActCtrl: TWinControl; _Parent: TTreeNode; var _Found: Boolean);
   var
     CtrlItem: TTreeNode;
   begin
     CtrlItem := _Parent.getFirstChild;
     while Assigned(CtrlItem) do begin
       if CtrlItem.Data = _ActCtrl then begin
-        CtrlItem.Selected := true;
+        CtrlItem.Selected := True;
         CtrlItem.MakeVisible;
         FLastActiveControl := CtrlItem.Data;
         _Found := True;
@@ -580,7 +586,7 @@ var
   ActFrmCaption: string;
   ActCtrl: TWinControl;
   FrmItem: TTreeNode;
-  HasFrmChanged: boolean;
+  HasFrmChanged: Boolean;
   Found: Boolean;
   ParentForm: TCustomForm;
 begin
