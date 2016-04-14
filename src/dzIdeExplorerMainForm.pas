@@ -58,6 +58,8 @@ type
     ts_Parent: TTabSheet;
     tv_Parents: TTreeView;
     b_SelectActive: TButton;
+    pm_Parents: TPopupMenu;
+    mi_CopyPath: TMenuItem;
     procedure FormShow(Sender: TObject);
     procedure tv_FormsChange(Sender: TObject; Node: TTreeNode);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -70,6 +72,7 @@ type
     procedure b_UpdateClick(Sender: TObject);
     procedure chk_FollowClick(Sender: TObject);
     procedure b_SelectActiveClick(Sender: TObject);
+    procedure mi_CopyPathClick(Sender: TObject);
   private
     FSelecting: Boolean;
     FActiveControlChangedHook: TNotifyEventHook;
@@ -102,6 +105,7 @@ uses
   Rtti,
 {$ENDIF HAS_UNIT_RTTI}
   StrUtils,
+  Clipbrd,
   dzIdeExplorerUtils,
   dzIdeExplorerVcl,
 {$IFNDEF nodzFmxSupport}
@@ -250,7 +254,7 @@ begin
   if frm <> Self then begin
     for i := Low(MY_FORM_CLASSES) to High(MY_FORM_CLASSES) do
       if frm is MY_FORM_CLASSES[i] then
-        exit; //==>
+        Exit; //==>
     FActiveDelphiForm := frm;
     FActiveDelphiControl := Screen.ActiveControl;
   end;
@@ -281,6 +285,28 @@ begin
   if not Assigned(Node) then
     Exit;
   Node.Collapse(True);
+end;
+
+procedure TExplorerForm.mi_CopyPathClick(Sender: TObject);
+var
+  IndentStr: string;
+
+  function Recurse(_tn: TTreeNode): string;
+  begin
+    if _tn = nil then
+      Result := ''
+    else begin
+      Result := Recurse(_tn.Parent) + #13#10 + IndentStr + '> ' + _tn.Text;
+      IndentStr := IndentStr + '  ';
+    end;
+  end;
+
+var
+  s: string;
+begin
+  IndentStr := '';
+  s := Recurse(tv_Parents.Selected);
+  Clipboard.AsText := s;
 end;
 
 procedure TExplorerForm.mi_ExpandallClick(Sender: TObject);
@@ -570,7 +596,7 @@ procedure TExplorerForm.SelectFocused(_Force: Boolean);
 
   function doGetParentForm(_ctrl: TControl): TCustomForm;
   begin
-{$IFDEF Delphi2005_up}
+{$IFDEF DELPHI2005_UP}
     Result := GetParentForm(_ctrl, False)
 {$ELSE}
     // GetParentForm did not yet have the boolean parameter

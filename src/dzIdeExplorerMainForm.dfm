@@ -188,6 +188,7 @@ object ExplorerForm: TExplorerForm
         Align = alClient
         Images = im_Controls
         Indent = 19
+        PopupMenu = pm_Parents
         ReadOnly = True
         TabOrder = 0
       end
@@ -886,6 +887,14 @@ object ExplorerForm: TExplorerForm
     object mi_Show: TMenuItem
       Caption = 'Show'
       OnClick = mi_ShowClick
+    end
+  end
+  object pm_Parents: TPopupMenu
+    Left = 432
+    Top = 152
+    object mi_CopyPath: TMenuItem
+      Caption = 'Copy Path'
+      OnClick = mi_CopyPathClick
     end
   end
 end
