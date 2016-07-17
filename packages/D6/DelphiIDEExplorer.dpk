@@ -33,7 +33,8 @@ requires
   rtl,
   DesignIde,
   Vcl,
-  vclx;
+  vclx,
+  dclact;
 
 contains
   dzIdeExplorerClassInformation in '..\..\src\dzIdeExplorerClassInformation.pas',
