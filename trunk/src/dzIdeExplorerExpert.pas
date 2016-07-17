@@ -39,17 +39,8 @@ type
     FAboutPluginIndex: Integer;
 {$ENDIF DELPHI2005_UP}
 {$IFDEF testWizard}
-    FIsAutocompleteEnabled: Boolean;
     FTestItem: TMenuItem;
-    FTimer: TTimer;
     procedure TestClick(_Sender: TObject);
-    procedure OnTimer(_Sender: TObject);
-    procedure HandleFilesDropped(_Sender: TObject; _Files: TStrings);
-    function TryGetSearchPathForm(out _frm: TForm): Boolean;
-    ///<summary>
-    /// frm can be nil </summary>
-    function TryGetSearchPathEdit(var _frm: TForm; out _ed: TEdit): Boolean; overload;
-    function TryGetSearchPathEdit(out _ed: TEdit): Boolean; overload;
 {$ENDIF testWizard}
     procedure ShowExplorer(_Sender: TObject);
     class procedure InitSplashScreen; // static;
@@ -133,7 +124,6 @@ var
 begin
   try
 {$IFDEF testWizard}
-    FreeAndNil(FTimer);
     FreeAndNil(FTestItem);
 {$ENDIF testWizard}
 
@@ -162,117 +152,9 @@ end;
 
 procedure TDGHIDEExplorer.TestClick(_Sender: TObject);
 begin
-  if Assigned(FTimer) then
-    FreeAndNil(FTimer)
-  else begin
-    FTimer := TTimer.Create(nil);
-    FTimer.OnTimer := Self.OnTimer;
-    FTimer.Interval := 500;
-    FTimer.Enabled := True;
-  end;
+
 end;
 
-function TDGHIDEExplorer.TryGetSearchPathEdit(out _ed: TEdit): Boolean;
-var
-  frm: TForm;
-begin
-  frm := nil;
-  Result := TryGetSearchPathEdit(frm, _ed);
-end;
-
-{$IFDEF DELPHIXE_UP}
-const
-  SearchPathDialogClass = 'TInheritedListEditDlg';
-  SearchPathDialogName = 'InheritedListEditDlg';
-  SearchPathDialogCaption = 'Search Path';
-  SearchPathDialogCaptionFR = 'Chemin de recherche';
-{$ELSE DELPHIXE_UP}
-{$IFDEF DELPHI2009_UP}
-const
-  SearchPathDialogClass = 'TInheritedListEditDlg';
-  SearchPathDialogName = 'InheritedListEditDlg';
-  SearchPathDialogCaption = 'Search path';
-  SearchPathDialogCaptionFR = 'Chemin de recherche';
-{$ELSE DELPHI2009_UP}
-{$IFDEF Delphi6_UP}
-const
-  SearchPathDialogClass = 'TOrderedListEditDlg';
-  SearchPathDialogName = 'OrderedListEditDlg';
-  SearchPathDialogCaption = 'Directories';
-  SearchPathDialogCaptionFR = 'Chemin de recherche';
-{$ELSE Delphi6_UP}
-{$MESSAGE ERROR 'Unsupported Delphi Version'}
-{$ENDIF Delphi6_UP}
-{$ENDIF DELPHI2009_UP}
-{$ENDIF DELPHI_XE_UP}
-
-function TDGHIDEExplorer.TryGetSearchPathForm(out _frm: TForm): Boolean;
-var
-  ActFrm: TForm;
-begin
-  Result := False;
-  ActFrm := TVclUtils.Screen.ActiveForm;
-  if not Assigned(ActFrm) then
-    Exit;
-  if not SameText(ActFrm.ClassName, SearchPathDialogClass) or not SameText(ActFrm.Name, SearchPathDialogName) then
-    Exit;
-  if not SameText(ActFrm.Caption, SearchPathDialogCaption)
-    and not SameText(ActFrm.Caption, SearchPathDialogCaptionFR) then
-    Exit;
-  _frm := ActFrm;
-  Result := True;
-end;
-
-function TDGHIDEExplorer.TryGetSearchPathEdit(var _frm: TForm; out _ed: TEdit): Boolean;
-var
-  cmp: TComponent;
-begin
-  Result := False;
-  if not Assigned(_frm) and not TryGetSearchPathForm(_frm) then
-    Exit;
-  cmp := _frm.FindComponent('ElementEdit');
-  if not Assigned(cmp) then
-    Exit;
-  if not (cmp is TEdit) then
-    Exit;
-
-  _ed := cmp as TEdit;
-  Result := True;
-end;
-
-procedure TDGHIDEExplorer.OnTimer(_Sender: TObject);
-var
-  ed: TEdit;
-  frm: TForm;
-  cmp: TComponent;
-begin
-  frm := nil;
-  if not TryGetSearchPathEdit(frm, ed) then begin
-    FIsAutocompleteEnabled := False;
-  end else begin
-    if not FIsAutocompleteEnabled then begin
-      TEdit_SetAutocomplete(ed, [acsFileSystem], [actSuggest]);
-      FIsAutocompleteEnabled := True;
-      TWinControl_ActivateDropFiles(ed, HandleFilesDropped);
-      cmp := frm.FindComponent('CreationList');
-      if cmp is TListBox then begin
-        TWinControl_ActivateDropFiles(TListBox(cmp), HandleFilesDropped);
-        cmp := frm.FindComponent('InvalidPathLbl');
-        if cmp is TLabel then
-          TLabel(cmp).Caption := 'Drag and drop is enabled';
-      end;
-    end;
-  end;
-end;
-
-procedure TDGHIDEExplorer.HandleFilesDropped(_Sender: TObject; _Files: TStrings);
-var
-  ed: TEdit;
-begin
-  if (_Files.Count = 0) or not TryGetSearchPathEdit(ed) then
-    Exit;
-  ed.Text := _Files[0];
-end;
 {$ENDIF testWizard}
 
 procedure TDGHIDEExplorer.Execute;
