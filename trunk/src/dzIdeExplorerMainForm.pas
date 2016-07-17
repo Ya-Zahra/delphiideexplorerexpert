@@ -27,6 +27,8 @@ uses
 // Imagelist is new in Delphi 10 Seattle, for older verions
 // add a unit alias as ImageList=Controls
   ImageList,
+  ActnList,
+  ActnMan,
   dzIdeExplorerClassInformation,
   dzIdeExplorerEventHook;
 
@@ -94,6 +96,8 @@ type
     procedure UpdateParents(_ctrl: TControl);
     procedure AddSubmenuItems(_ParentNode: TTreeNode; _Item: TMenuItem);
     procedure UpdateSubmenu(_mi: TMenuItem);
+    procedure UpdateActionList(_lst: TActionList);
+    procedure UpdateActionManager(_mgr: TActionManager);
   public
     constructor Create(_Owner: TComponent); override;
     destructor Destroy; override;
@@ -107,6 +111,7 @@ uses
   TypInfo,
   Variants,
   Registry,
+  Actions,
 {$IFDEF HAS_UNIT_RTTI}
   Rtti,
 {$ENDIF HAS_UNIT_RTTI}
@@ -861,6 +866,10 @@ begin
       UpdateMenu(_Node.Data)
     else if cmp is TMenuItem then
       UpdateSubmenu(_Node.Data)
+    else if cmp is TActionList then
+      UpdateActionList(_Node.Data)
+    else if cmp is TActionManager then
+      UpdateActionManager(_Node.Data)
   finally
     tv_Additional.Items.EndUpdate;
   end;
@@ -930,6 +939,40 @@ begin
   ts_Additional.Caption := 'Submenu';
   PNode := tv_Additional.Items.AddChild(nil, _mi.Name + ': ' + _mi.ClassName);
   AddSubmenuItems(PNode, _mi);
+  PNode.Expand(False);
+end;
+
+procedure TExplorerForm.UpdateActionList(_lst: TActionList);
+var
+  PNode: TTreeNode;
+  i: Integer;
+  act: TContainedAction;
+  Items: TTreeNodes;
+begin
+  ts_Additional.Caption := 'Actions';
+  Items := tv_Additional.Items;
+  PNode := Items.AddChild(nil, _lst.Name + ': ' + _lst.ClassName);
+  for i := 0 to _lst.ActionCount - 1 do begin
+    act := _lst.Actions[i];
+    Items.AddChild(PNode, act.Name + ': ' + act.ClassName + ' - "' + act.Caption + '"')
+  end;
+  PNode.Expand(False);
+end;
+
+procedure TExplorerForm.UpdateActionManager(_mgr: TActionManager);
+var
+  PNode: TTreeNode;
+  i: Integer;
+  act: TContainedAction;
+  Items: TTreeNodes;
+begin
+  ts_Additional.Caption := 'Actions';
+  Items := tv_Additional.Items;
+  PNode := Items.AddChild(nil, _mgr.Name + ': ' + _mgr.ClassName);
+  for i := 0 to _mgr.ActionCount - 1 do begin
+    act := _mgr.Actions[i];
+    Items.AddChild(PNode, act.Name + ': ' + act.ClassName + ' - "' + act.Caption + '"')
+  end;
   PNode.Expand(False);
 end;
 
