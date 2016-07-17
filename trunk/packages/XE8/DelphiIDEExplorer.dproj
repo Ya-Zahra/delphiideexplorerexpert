@@ -56,7 +56,7 @@
         <GenPackage>true</GenPackage>
         <DCC_F>false</DCC_F>
         <SanitizedProjectName>DelphiIDEExplorer</SanitizedProjectName>
-        <DCC_DcuOutput>..\..\dcu\XE8</DCC_DcuOutput>
+        <DCC_DcuOutput>.\dcu</DCC_DcuOutput>
         <DCC_K>false</DCC_K>
         <VerInfo_Locale>2057</VerInfo_Locale>
         <DCC_DebugInformation>1</DCC_DebugInformation>
