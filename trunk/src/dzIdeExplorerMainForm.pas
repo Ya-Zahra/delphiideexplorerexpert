@@ -1009,6 +1009,14 @@ begin
   PNode.Expand(False);
 end;
 
+function GetActionCaption(_act: TContainedAction): string;
+begin
+  if _act is TCustomAction then
+    Result := TCustomAction(_act).Caption
+  else
+    Result := '';
+end;
+
 procedure TExplorerForm.UpdateActionList(_lst: TActionList);
 var
   PNode: TTreeNode;
@@ -1021,7 +1029,7 @@ begin
   PNode := Items.AddChild(nil, _lst.Name + ': ' + _lst.ClassName);
   for i := 0 to _lst.ActionCount - 1 do begin
     act := _lst.Actions[i];
-    Items.AddChild(PNode, act.Name + ': ' + act.ClassName + ' - "' + act.Caption + '"')
+    Items.AddChild(PNode, act.Name + ': ' + act.ClassName + ' - "' + GetActionCaption(act) + '"')
   end;
   PNode.Expand(False);
 end;
@@ -1038,7 +1046,7 @@ begin
   PNode := Items.AddChild(nil, _mgr.Name + ': ' + _mgr.ClassName);
   for i := 0 to _mgr.ActionCount - 1 do begin
     act := _mgr.Actions[i];
-    Items.AddChild(PNode, act.Name + ': ' + act.ClassName + ' - "' + act.Caption + '"')
+    Items.AddChild(PNode, act.Name + ': ' + act.ClassName + ' - "' + GetActionCaption(act) + '"')
   end;
   PNode.Expand(False);
 end;

@@ -29,7 +29,7 @@ Y=1
 Z=1
 ShowHints=1
 ShowWarnings=1
-UnitAliases=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;ImageList=Controls;ImageList=Controls
+UnitAliases=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;ImageList=Controls;ImageList=Controls;Actions=ActnList
 [Linker]
 MapFile=0
 OutputObjs=0
@@ -81,12 +81,16 @@ OriginalFilename=
 ProductName=
 ProductVersion=1.0.0.0
 Comments=
+[Excluded Packages]
+c:\delphi\delphi6\Bin\dclclxdb60.bpl=Borland CLX Database Components
+C:\Delphi\Delphi6\bin\dclclxstd60.bpl=Borland CLX Standard Components
 [HistoryLists\hlConditionals]
 Count=1
 Item0=nodzFmxSupport;DEBUG
 [HistoryLists\hlUnitAliases]
-Count=1
-Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;
+Count=2
+Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;ImageList=Controls;ImageList=Controls;Actions=ActnList
+Item1=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;
 [HistoryLists\hlUnitOutputDirectory]
 Count=3
 Item0=.\dcu
