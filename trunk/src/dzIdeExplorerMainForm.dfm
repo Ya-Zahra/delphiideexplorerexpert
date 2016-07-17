@@ -123,9 +123,12 @@ object ExplorerForm: TExplorerForm
         HideSelection = False
         ReadOnly = True
         RowSelect = True
+        ParentShowHint = False
+        ShowHint = True
         SmallImages = im_Properties
         TabOrder = 0
         ViewStyle = vsReport
+        OnInfoTip = lv_PropertiesInfoTip
       end
     end
     object ts_Events: TTabSheet

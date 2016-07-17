@@ -75,6 +75,7 @@ type
     procedure chk_FollowClick(Sender: TObject);
     procedure b_SelectActiveClick(Sender: TObject);
     procedure mi_CopyPathClick(Sender: TObject);
+    procedure lv_PropertiesInfoTip(Sender: TObject; Item: TListItem; var InfoTip: string);
   private
     FSelecting: Boolean;
     FActiveControlChangedHook: TNotifyEventHook;
@@ -85,6 +86,7 @@ type
     FLastActiveControl: TWinControl;
     FVclForms: TTreeNode;
     FClassInfo: TClassInfoList;
+    FValueHints: TStringList;
     procedure FillTree;
     procedure SelectFocused(_Force: Boolean);
     procedure HandleOnActiveControlChange(Sender: TObject);
@@ -139,6 +141,7 @@ begin
   pc_Details.ActivePage := ts_Properties;
 
   FClassInfo := TClassInfoList.Create;
+  FValueHints := TStringList.Create;
 
   Reg := TRegIniFile.Create(TApplication_GetRegistryPath);
   try
@@ -170,6 +173,7 @@ destructor TExplorerForm.Destroy;
 begin
   if Assigned(FActiveControlChangedHook) then
     UnhookScreenActiveControlChange(FActiveControlChangedHook);
+  FreeAndNil(FValueHints);
   FreeAndNil(FClassInfo);
   inherited;
 end;
@@ -271,6 +275,19 @@ begin
   end;
   if FFollowFocusEnabled then
     SelectFocused(False);
+end;
+
+procedure TExplorerForm.lv_PropertiesInfoTip(Sender: TObject; Item: TListItem; var InfoTip: string);
+var
+  Idx: Integer;
+begin
+  InfoTip := '';
+  if not Assigned(Item) or (Item.SubItems.Count = 0) then
+    Exit; //==>
+  Idx := Integer(Item.SubItems.Objects[0]) - 1;
+  if (Idx < 0) or (Idx >= FValueHints.Count) then
+    Exit;
+  InfoTip := FValueHints[Idx];
 end;
 
 procedure TExplorerForm.mi_ClickClick(Sender: TObject);
@@ -519,13 +536,57 @@ begin
   Result := ObjName + '.' + MethodName;
 end;
 
-function GetObjectDescription(_Obj: TObject): string;
+function MakePrintableString(const _s: string): string;
+var
+  i: Integer;
+  c: Char;
+  LastWasEscaped: Boolean;
 begin
+  Result := '';
+  LastWasEscaped := False;
+  for i := 1 to Length(_s) do begin
+    c := _s[i];
+    if c < #32 then begin
+      if not LastWasEscaped then begin
+        Result := Result + '''';
+      end;
+      Result := Result + '#' + IntToStr(Ord(c));
+      LastWasEscaped := True;
+    end else begin
+      if LastWasEscaped or (Result = '') then
+        Result := Result + '''';
+      Result := Result + c;
+      LastWasEscaped := False;
+    end;
+  end;
+  if not LastWasEscaped then
+    Result := Result + '''';
+end;
+
+function StripTrailingCrLf(const _s: string): string;
+var
+  Len: Integer;
+begin
+  Result := _s;
+  Len := Length(Result);
+  if Len < 2 then
+    Exit; //==>
+  if Copy(Result, Len - 1, 2) = #13#10 then
+    Result := Copy(Result, 1, Len - 2);
+end;
+
+function GetObjectDescription(_Obj: TObject; out _Hint: string): string;
+begin
+  _Hint := '';
   if not Assigned(_Obj) then
     Result := 'Nil'
   else if _Obj is TComponent then
     Result := TComponent(_Obj).Name
-  else
+  else if _Obj is TStrings then begin
+    _Hint := StripTrailingCrLf((_Obj as TStrings).Text);
+    Result := MakePrintableString(_Hint);
+    Result := _Obj.ClassName + ': ' + Result;
+  end else
     Result := _Obj.ClassName + '($' + IntToHex(Integer(_Obj), 8) + ')'
 end;
 
@@ -708,6 +769,7 @@ var
   PropTypeName: TSymbolName;
   objTemp: TObject;
   i64Temp: Int64;
+  ValueHint: string;
 begin
   TheStatusBar.SimpleText := GetFullNodeName(_Node);
   lv_Properties.Items.BeginUpdate;
@@ -715,6 +777,7 @@ begin
   try
     lv_Properties.Items.Clear;
     lv_Events.Items.Clear;
+    FValueHints.Clear;
     if (_Node = nil) or (_Node.Data = nil) then
       Exit; //==>
 
@@ -735,6 +798,7 @@ begin
           lvItem.SubItems.Add(Copy(strTemp, 3, MaxInt));
           ValueStr := '<Unknown>';
           try
+            ValueHint := '';
             case PropList[i].PropType^.Kind of
               tkInteger: begin
                   iTemp := GetOrdProp(TObject(_Node.Data), PropList[i]);
@@ -757,7 +821,7 @@ begin
                 end;
               tkClass: begin
                   objTemp := GetObjectProp(TObject(_Node.Data), PropList[i]);
-                  ValueStr := GetObjectDescription(objTemp);
+                  ValueStr := GetObjectDescription(objTemp, ValueHint);
                 end;
               tkMethod: begin
                   Method := GetMethodProp(TObject(_Node.Data), PropList[i]);
@@ -803,6 +867,9 @@ begin
             ValueStr := '#Exception#';
           end;
           lvItem.SubItems.Add(ValueStr);
+          if ValueHint <> '' then begin
+            lvItem.SubItems.Objects[0] := Pointer(FValueHints.Add(ValueHint) + 1);
+          end;
         end;
       end;
     finally
