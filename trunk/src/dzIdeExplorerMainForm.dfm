@@ -176,10 +176,10 @@ object ExplorerForm: TExplorerForm
         TabOrder = 0
       end
     end
-    object ts_Parent: TTabSheet
+    object ts_Additional: TTabSheet
       Caption = 'Parents'
       ImageIndex = 3
-      object tv_Parents: TTreeView
+      object tv_Additional: TTreeView
         Left = 0
         Top = 0
         Width = 281
