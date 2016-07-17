@@ -3,7 +3,7 @@ object ExplorerForm: TExplorerForm
   Top = 202
   Caption = 'Delphi IDE Explorer'
   ClientHeight = 314
-  ClientWidth = 580
+  ClientWidth = 617
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -16,22 +16,21 @@ object ExplorerForm: TExplorerForm
   PixelsPerInch = 96
   TextHeight = 13
   object TheSplitter: TSplitter
-    Left = 288
+    Left = 325
     Top = 0
     Height = 295
-    Align = alRight
   end
   object p_Left: TPanel
     Left = 0
     Top = 0
-    Width = 288
+    Width = 325
     Height = 295
-    Align = alClient
+    Align = alLeft
     TabOrder = 0
     object p_LeftTop: TPanel
       Left = 1
       Top = 1
-      Width = 286
+      Width = 323
       Height = 30
       Align = alTop
       TabOrder = 1
@@ -75,7 +74,7 @@ object ExplorerForm: TExplorerForm
     object tv_Forms: TTreeView
       Left = 1
       Top = 31
-      Width = 286
+      Width = 323
       Height = 263
       Align = alClient
       HideSelection = False
@@ -89,12 +88,12 @@ object ExplorerForm: TExplorerForm
     end
   end
   object pc_Details: TPageControl
-    Left = 291
+    Left = 328
     Top = 0
     Width = 289
     Height = 295
     ActivePage = ts_Properties
-    Align = alRight
+    Align = alClient
     TabOrder = 1
     object ts_Properties: TTabSheet
       Caption = '&Properties'
@@ -197,7 +196,7 @@ object ExplorerForm: TExplorerForm
   object TheStatusBar: TStatusBar
     Left = 0
     Top = 295
-    Width = 580
+    Width = 617
     Height = 19
     Panels = <>
     SimplePanel = True

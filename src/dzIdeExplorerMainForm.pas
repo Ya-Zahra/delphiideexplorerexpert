@@ -79,7 +79,6 @@ type
     FFollowFocusEnabled: Boolean;
     FActiveDelphiForm: TForm;
     FActiveDelphiControl: TWinControl;
-  private
     FLastActiveForm: TForm;
     FLastActiveControl: TWinControl;
     FVclForms: TTreeNode;
@@ -88,6 +87,9 @@ type
     procedure SelectFocused(_Force: Boolean);
     procedure HandleOnActiveControlChange(Sender: TObject);
     procedure WMEnable(var _Msg: TWMEnable); message WM_ENABLE;
+    procedure UpdatePropertiesAndEvents(_Node: TTreeNode);
+    procedure UpdateHierarchy(_Node: TTreeNode);
+    procedure UpdateParents(_Node: TTreeNode);
   public
     constructor Create(_Owner: TComponent); override;
     destructor Destroy; override;
@@ -520,14 +522,17 @@ end;
 
 function GetIntegerDescription(_Value: Integer; const _PropTypeName: string): string;
 begin
+  Result := '';
   if _PropTypeName = 'TColor' then
     Result := ColorToString(_Value)
   else if _PropTypeName = 'TCursor' then
-    Result := CursorToString(_Value)
-  else if _PropTypeName = 'Byte' then
-    Result := IntToStr(_Value) + ' ($' + IntToHex(_Value, 2) + ')'
+    Result := CursorToString(_Value);
+  Result := Result + ' ' + IntToStr(_Value);
+  if _PropTypeName = 'Byte' then
+    Result := Result + ' ($' + IntToHex(_Value, 2) + ')'
   else
-    Result := IntToStr(_Value) + ' ($' + IntToHex(_Value, 8) + ')';
+    Result := Result + ' ($' + IntToHex(_Value, 8) + ')';
+  Result := Trim(Result);
 end;
 
 type
@@ -584,11 +589,11 @@ procedure TExplorerForm.SelectFocused(_Force: Boolean);
         CtrlItem.MakeVisible;
         FLastActiveControl := CtrlItem.Data;
         _Found := True;
-        exit;
+        Exit;
       end else if TObject(CtrlItem.Data) is TWinControl then begin
         SelectFocusedControl(_ActCtrl, CtrlItem, _Found);
         if _Found then
-          exit;
+          Exit;
       end;
       CtrlItem := CtrlItem.getNextSibling;
     end;
@@ -617,7 +622,7 @@ var
   ParentForm: TCustomForm;
 begin
   if FSelecting then
-    exit;
+    Exit;
 
   FSelecting := True;
   tv_Forms.Items.BeginUpdate;
@@ -668,6 +673,14 @@ begin
 end;
 
 procedure TExplorerForm.tv_FormsChange(Sender: TObject; Node: TTreeNode);
+begin
+  TheStatusBar.SimpleText := GetFullNodeName(Node);
+  UpdatePropertiesAndEvents(Node);
+  UpdateHierarchy(Node);
+  UpdateParents(Node);
+end;
+
+procedure TExplorerForm.UpdatePropertiesAndEvents(_Node: TTreeNode);
 {$IFNDEF DelphiXE6_Up}
 type
   TSymbolName = ShortString;
@@ -682,26 +695,21 @@ var
   iTemp: Integer;
   s: TIntegerSet;
   ti: PTypeInfo;
-  PNode: TTreeNode;
-  ClassRef: TClass;
-  strList: TStringList;
   ValueStr: string;
   PropTypeName: TSymbolName;
   objTemp: TObject;
   i64Temp: Int64;
-  Ctrl: TControl;
-  CtrlIdxStr: string;
 begin
-  TheStatusBar.SimpleText := GetFullNodeName(Node);
+  TheStatusBar.SimpleText := GetFullNodeName(_Node);
   lv_Properties.Items.BeginUpdate;
   lv_Events.Items.BeginUpdate;
   try
     lv_Properties.Items.Clear;
     lv_Events.Items.Clear;
-    if (Node <> nil) and (Node.Data <> nil) then begin
+    if (_Node <> nil) and (_Node.Data <> nil) then begin
       Getmem(PropList, SizeOf(TPropList));
       try
-        iNumOfProps := GetPropList(TComponent(Node.Data).ClassInfo, tkAny, PropList);
+        iNumOfProps := GetPropList(TComponent(_Node.Data).ClassInfo, tkAny, PropList);
         for i := 0 to iNumOfProps - 1 do begin
           if PropList[i].PropType^.Kind = tkMethod then
             lvItem := lv_Events.Items.Add
@@ -718,30 +726,30 @@ begin
             try
               case PropList[i].PropType^.Kind of
                 tkInteger: begin
-                    iTemp := GetOrdProp(TObject(Node.Data), PropList[i]);
+                    iTemp := GetOrdProp(TObject(_Node.Data), PropList[i]);
                     ValueStr := GetIntegerDescription(iTemp, string(PropTypeName));
                   end;
                 tkChar: begin
-                    iTemp := GetOrdProp(TObject(Node.Data), PropList[i]);
-                    ValueStr := IntToHex(iTemp, 1) + ' ' + IntToStr(iTemp) + ' ' + chr(iTemp);
+                    iTemp := GetOrdProp(TObject(_Node.Data), PropList[i]);
+                    ValueStr := IntToHex(iTemp, 1) + ' ' + IntToStr(iTemp) + ' ' + Chr(iTemp);
                   end;
                 tkEnumeration: begin
-                    iTemp := GetOrdProp(TObject(Node.Data), PropList[i]);
+                    iTemp := GetOrdProp(TObject(_Node.Data), PropList[i]);
                     ValueStr := GetEnumName(PropList[i].PropType^, iTemp);
                   end;
                 tkFloat:
-                  ValueStr := FloatToStr(GetFloatProp(TObject(Node.Data), PropList[i]));
+                  ValueStr := FloatToStr(GetFloatProp(TObject(_Node.Data), PropList[i]));
                 tkSet: begin
                     ti := GetTypeData(PropList[i].PropType^)^.CompType^;
-                    Integer(s) := GetOrdProp(TObject(Node.Data), PropList[i]);
+                    Integer(s) := GetOrdProp(TObject(_Node.Data), PropList[i]);
                     ValueStr := GetSetDescription(ti, s);
                   end;
                 tkClass: begin
-                    objTemp := GetObjectProp(TObject(Node.Data), PropList[i]);
+                    objTemp := GetObjectProp(TObject(_Node.Data), PropList[i]);
                     ValueStr := GetObjectDescription(objTemp);
                   end;
                 tkMethod: begin
-                    Method := GetMethodProp(TObject(Node.Data), PropList[i]);
+                    Method := GetMethodProp(TObject(_Node.Data), PropList[i]);
                     ValueStr := GetMethodDescription(Method);
                   end;
                 tkWChar: begin
@@ -749,11 +757,11 @@ begin
                     ValueStr := '[== Unhandled ==]';
                   end;
                 tkLString, tkString:
-                  ValueStr := GetStrProp(TObject(Node.Data), PropList[i]);
+                  ValueStr := GetStrProp(TObject(_Node.Data), PropList[i]);
                 tkWString:
-                  ValueStr := GetWideStrProp(TObject(Node.Data), PropList[i]);
+                  ValueStr := GetWideStrProp(TObject(_Node.Data), PropList[i]);
                 tkVariant:
-                  ValueStr := VarToStrDef(GetVariantProp(TObject(Node.Data), PropList[i]), 'Null');
+                  ValueStr := VarToStrDef(GetVariantProp(TObject(_Node.Data), PropList[i]), 'Null');
                 tkArray:
                   ValueStr := '<Array>';
                 tkRecord:
@@ -762,14 +770,14 @@ begin
 //                  GetInterfaceProp(Node.Data, PropList[i])
                   ValueStr := '<Interface>';
                 tkInt64: begin
-                    i64Temp := GetInt64Prop(TObject(Node.Data), PropList[i]);
+                    i64Temp := GetInt64Prop(TObject(_Node.Data), PropList[i]);
                     ValueStr := IntToStr(i64Temp) + '($' + IntToHex(i64Temp, 16) + ')';
                   end;
                 tkDynArray:
                   ValueStr := '<DynArray>';
 {$IFDEF Delphi2009_Up}
                 tkUString:
-                  ValueStr := GetUnicodeStrProp(Node.Data, PropList[i]);
+                  ValueStr := GetUnicodeStrProp(_Node.Data, PropList[i]);
 {$ENDIF Delphi2009_Up}
 {$IFDEF Delphi2010_Up}
                 tkClassRef:
@@ -794,61 +802,82 @@ begin
     lv_Events.Items.EndUpdate;
     lv_Properties.Items.EndUpdate;
   end;
+end;
+
+procedure TExplorerForm.UpdateHierarchy(_Node: TTreeNode);
+var
+  ClassRef: TClass;
+  i: Integer;
+  PNode: TTreeNode;
+  strList: TStringList;
+begin
   tv_Hierarchy.Items.BeginUpdate;
   try
-    PNode := nil;
     tv_Hierarchy.Items.Clear;
-    if (Node <> nil) and (Node.Data <> nil) then begin
-      ClassRef := TComponent(Node.Data).ClassType;
-      strList := TStringList.Create;
-      try
-        while ClassRef <> nil do begin
-          strList.Insert(0, ClassRef.ClassName);
-          ClassRef := ClassRef.ClassParent;
-        end;
-        for i := 0 to strList.Count - 1 do begin
-          PNode := tv_Hierarchy.Items.AddChild(PNode, strList[i]);
-          PNode.ImageIndex := 3;
-          PNode.SelectedIndex := 3;
-        end;
-        if tv_Hierarchy.Items[0] <> nil then
-          tv_Hierarchy.Items[0].Expand(True);
-      finally
-        strList.Free;
+    if (_Node = nil) or (_Node.Data = nil) then
+      Exit; //==>
+
+    PNode := nil;
+    ClassRef := TComponent(_Node.Data).ClassType;
+    strList := TStringList.Create;
+    try
+      while ClassRef <> nil do begin
+        strList.Insert(0, ClassRef.ClassName);
+        ClassRef := ClassRef.ClassParent;
       end;
+      for i := 0 to strList.Count - 1 do begin
+        PNode := tv_Hierarchy.Items.AddChild(PNode, strList[i]);
+        PNode.ImageIndex := 3;
+        PNode.SelectedIndex := 3;
+      end;
+      if tv_Hierarchy.Items[0] <> nil then
+        tv_Hierarchy.Items[0].Expand(True);
+    finally
+      strList.Free;
     end;
   finally
     tv_Hierarchy.Items.EndUpdate;
   end;
+end;
+
+procedure TExplorerForm.UpdateParents(_Node: TTreeNode);
+var
+  PNode: TTreeNode;
+  Ctrl: TControl;
+  strList: TStringList;
+  CtrlIdxStr: string;
+  i: Integer;
+begin
   tv_Parents.Items.BeginUpdate;
   try
+    if (_Node = nil) or (_Node.Data = nil) or not (TComponent(_Node.Data) is TControl) then
+      Exit; //==>
+
     PNode := nil;
     tv_Parents.Items.Clear;
-    if (Node <> nil) and (Node.Data <> nil) and (TComponent(Node.Data) is TControl) then begin
-      Ctrl := Node.Data;
-      strList := TStringList.Create;
-      try
-        while Ctrl <> nil do begin
-          CtrlIdxStr := '';
-          if Assigned(Ctrl.Parent) then begin
-            for i := 0 to Ctrl.Parent.ControlCount - 1 do begin
-              if Ctrl.Parent.Controls[i] = Ctrl then
-                CtrlIdxStr := '[' + IntToStr(i) + '] ';
-            end;
+    Ctrl := _Node.Data;
+    strList := TStringList.Create;
+    try
+      while Ctrl <> nil do begin
+        CtrlIdxStr := '';
+        if Assigned(Ctrl.Parent) then begin
+          for i := 0 to Ctrl.Parent.ControlCount - 1 do begin
+            if Ctrl.Parent.Controls[i] = Ctrl then
+              CtrlIdxStr := '[' + IntToStr(i) + '] ';
           end;
-          strList.Insert(0, CtrlIdxStr + Ctrl.Name + ': ' + Ctrl.ClassName);
-          Ctrl := Ctrl.Parent;
         end;
-        for i := 0 to strList.Count - 1 do begin
-          PNode := tv_Parents.Items.AddChild(PNode, strList[i]);
-          PNode.ImageIndex := 3;
-          PNode.SelectedIndex := 3;
-        end;
-        if tv_Parents.Items[0] <> nil then
-          tv_Parents.Items[0].Expand(True);
-      finally
-        strList.Free;
+        strList.Insert(0, CtrlIdxStr + Ctrl.Name + ': ' + Ctrl.ClassName);
+        Ctrl := Ctrl.Parent;
       end;
+      for i := 0 to strList.Count - 1 do begin
+        PNode := tv_Parents.Items.AddChild(PNode, strList[i]);
+        PNode.ImageIndex := 3;
+        PNode.SelectedIndex := 3;
+      end;
+      if tv_Parents.Items[0] <> nil then
+        tv_Parents.Items[0].Expand(True);
+    finally
+      strList.Free;
     end;
   finally
     tv_Parents.Items.EndUpdate;
