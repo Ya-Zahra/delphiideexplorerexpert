@@ -851,8 +851,9 @@ begin
               tkDynArray:
                 ValueStr := '<DynArray>';
 {$IFDEF Delphi2009_Up}
-              tkUString:
+              tkUString: begin
                 ValueStr := GetUnicodeStrProp(_Node.Data, PropList[i]);
+              end;
 {$ENDIF Delphi2009_Up}
 {$IFDEF Delphi2010_Up}
               tkClassRef:
