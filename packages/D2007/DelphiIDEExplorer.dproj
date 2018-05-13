@@ -66,5 +66,8 @@
     <DCCReference Include="..\..\src\dzIdeExplorerReg.pas" />
     <DCCReference Include="..\..\src\dzIdeExplorerUtils.pas" />
     <DCCReference Include="..\..\src\dzIdeExplorerVCL.pas" />
+    <RcCompile Include="..\..\src\SplashscreenIcon.rc">
+      <Form>SplashscreenIcon.res</Form>
+    </RcCompile>
   </ItemGroup>
 </Project>
