@@ -29,9 +29,11 @@ type
 
 function HookScreenActiveControlChange(_HookEvent: TNotifyEvent): TNotifyEventHook;
 procedure UnhookScreenActiveControlChange(_Hook: TNotifyEventHook);
+function IsHookScreenActiveControlChangeActive(_Hook: TNotifyEventHook): Boolean;
 
 function HookScreenActiveFormChange(_HookEvent: TNotifyEvent): TNotifyEventHook;
 procedure UnhookScreenActiveFormChange(_Hook: TNotifyEventHook);
+function IsHookScreenActiveFormChangeActive(_Hook: TNotifyEventHook): Boolean;
 
 implementation
 
@@ -66,6 +68,33 @@ begin
   Screen.OnActiveControlChange := Result.HandleEvent;
 end;
 
+function IsHookScreenActiveControlChangeActive(_Hook: TNotifyEventHook): Boolean;
+var
+  Ptr: TMethod;
+begin
+  Result := False;
+  if not Assigned(_Hook) then
+    Exit; //==>
+
+  Ptr := TMethod(Screen.OnActiveControlChange);
+  if (Ptr.Data = nil) or (Ptr.Code = nil) then
+    Exit; //==>
+
+  while TObject(Ptr.Data).ClassNameIs('TNotifyEventHook') do begin
+    // Somebody who knows about this standard has hooked the event.
+    // (Remember: Do not change the class name or the class structure. Otherwise this
+    //  check will fail!)
+    // Let's check whether we can find our own hook in the chain.
+    if Ptr.Data = _Hook then begin
+      Result := True;
+      Exit; //==>
+    end;
+    // check the next event in the chain
+    Ptr := TMethod(TNotifyEventHook(Ptr.Data).OrigEvent);
+  end;
+  // we could not find our TEventHook in the chain, so it probably was unhooked somehow
+end;
+
 procedure UnhookScreenActiveControlChange(_Hook: TNotifyEventHook);
 var
   Ptr: TMethod;
@@ -73,7 +102,7 @@ begin
   if not Assigned(_Hook) then begin
    // Just in case somebody did not check whether HookScreenActiveFormChange actually returned
    // a valid object or simply didn't call it.
-    Exit;
+    Exit; //==>
   end;
 
   Ptr := TMethod(Screen.OnActiveControlChange);
@@ -82,7 +111,7 @@ begin
     // It's probably safe to assume that there will be no reference to our hook left, so we just
     // free the object and be done.
     _Hook.Free;
-    Exit;
+    Exit; //==>
   end;
 
   while TObject(Ptr.Data).ClassNameIs('TNotifyEventHook') do begin
@@ -113,6 +142,33 @@ function HookScreenActiveFormChange(_HookEvent: TNotifyEvent): TNotifyEventHook;
 begin
   Result := TNotifyEventHook.Create(TMethod(Screen.OnActiveFormChange), TMethod(_HookEvent));
   Screen.OnActiveFormChange := Result.HandleEvent;
+end;
+
+function IsHookScreenActiveFormChangeActive(_Hook: TNotifyEventHook): Boolean;
+var
+  Ptr: TMethod;
+begin
+  Result := False;
+  if not Assigned(_Hook) then
+    Exit; //==>
+
+  Ptr := TMethod(Screen.OnActiveFormChange);
+  if (Ptr.Data = nil) or (Ptr.Code = nil) then
+    Exit; //==>
+
+  while TObject(Ptr.Data).ClassNameIs('TNotifyEventHook') do begin
+    // Somebody who knows about this standard has hooked the event.
+    // (Remember: Do not change the class name or the class structure. Otherwise this
+    //  check will fail!)
+    // Let's check whether we can find our own hook in the chain.
+    if Ptr.Data = _Hook then begin
+      Result := True;
+      Exit; //==>
+    end;
+    // check the next event in the chain
+    Ptr := TMethod(TNotifyEventHook(Ptr.Data).OrigEvent);
+  end;
+  // we could not find our TEventHook in the chain, so it probably was unhooked somehow
 end;
 
 procedure UnhookScreenActiveFormChange(_Hook: TNotifyEventHook);
