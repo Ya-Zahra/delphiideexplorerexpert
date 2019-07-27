@@ -899,4 +899,10 @@ object ExplorerForm: TExplorerForm
       OnClick = mi_CopyPathClick
     end
   end
+  object tim_CheckHook: TTimer
+    Interval = 500
+    OnTimer = tim_CheckHookTimer
+    Left = 48
+    Top = 40
+  end
 end

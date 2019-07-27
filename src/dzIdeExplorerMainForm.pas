@@ -62,6 +62,7 @@ type
     b_SelectActive: TButton;
     pm_Parents: TPopupMenu;
     mi_CopyPath: TMenuItem;
+    tim_CheckHook: TTimer;
     procedure FormShow(Sender: TObject);
     procedure tv_FormsChange(Sender: TObject; Node: TTreeNode);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -76,7 +77,9 @@ type
     procedure b_SelectActiveClick(Sender: TObject);
     procedure mi_CopyPathClick(Sender: TObject);
     procedure lv_PropertiesInfoTip(Sender: TObject; Item: TListItem; var InfoTip: string);
+    procedure tim_CheckHookTimer(Sender: TObject);
   private
+    FWasHookDeactivated: Boolean;
     FSelecting: Boolean;
     FActiveControlChangedHook: TNotifyEventHook;
     FFollowFocusEnabled: Boolean;
@@ -95,11 +98,12 @@ type
     procedure UpdateHierarchy(_Node: TTreeNode);
     procedure UpdateAdditional(_Node: TTreeNode);
     procedure UpdateMenu(_mnu: TMenu);
-    procedure UpdateParents(_ctrl: TControl);
+    procedure UpdateParents(_Ctrl: TControl);
     procedure AddSubmenuItems(_ParentNode: TTreeNode; _Item: TMenuItem);
     procedure UpdateSubmenu(_mi: TMenuItem);
     procedure UpdateActionList(_lst: TActionList);
     procedure UpdateActionManager(_mgr: TActionManager);
+    procedure UpdateActiveDelphiForm;
   public
     constructor Create(_Owner: TComponent); override;
     destructor Destroy; override;
@@ -133,7 +137,9 @@ var
   Section: string;
 begin
   inherited;
-
+{$IFNDEF DELPHIX_RIO_UP}
+  tim_CheckHook.Enabled := False;
+{$ENDIF}
   TForm_SetMinConstraints(Self);
 
   p_Left.BevelOuter := bvNone;
@@ -260,21 +266,32 @@ const
     Tf_IdeExplorerFilterForm,
     Tf_IdeExplorerMenuTree);
 
-procedure TExplorerForm.HandleOnActiveControlChange(Sender: TObject);
+procedure TExplorerForm.UpdateActiveDelphiForm;
 var
   frm: TForm;
   i: Integer;
+  ActiveControlChanged: Boolean;
+  ActControl: TWinControl;
 begin
+  ActiveControlChanged := False;
   frm := Screen.ActiveForm;
   if frm <> Self then begin
     for i := Low(MY_FORM_CLASSES) to High(MY_FORM_CLASSES) do
       if frm is MY_FORM_CLASSES[i] then
         Exit; //==>
     FActiveDelphiForm := frm;
-    FActiveDelphiControl := Screen.ActiveControl;
+    ActControl := Screen.ActiveControl;
+    ActiveControlChanged := (ActControl <> FActiveDelphiControl);
+    if ActiveControlChanged then
+      FActiveDelphiControl := ActControl;
   end;
-  if FFollowFocusEnabled then
+  if FFollowFocusEnabled and ActiveControlChanged then
     SelectFocused(False);
+end;
+
+procedure TExplorerForm.HandleOnActiveControlChange(Sender: TObject);
+begin
+  UpdateActiveDelphiForm;
 end;
 
 procedure TExplorerForm.lv_PropertiesInfoTip(Sender: TObject; Item: TListItem; var InfoTip: string);
@@ -669,13 +686,13 @@ procedure TExplorerForm.SelectFocused(_Force: Boolean);
     end;
   end;
 
-  function doGetParentForm(_ctrl: TControl): TCustomForm;
+  function doGetParentForm(_Ctrl: TControl): TCustomForm;
   begin
 {$IFDEF DELPHI2005_UP}
-    Result := GetParentForm(_ctrl, False)
+    Result := GetParentForm(_Ctrl, False)
 {$ELSE}
     // GetParentForm did not yet have the boolean parameter
-    Result := GetParentForm(_ctrl);
+    Result := GetParentForm(_Ctrl);
 {$ENDIF}
   end;
 
@@ -688,7 +705,7 @@ var
   ActCtrl: TWinControl;
   FrmItem: TTreeNode;
   HasFrmChanged: Boolean;
-  Found: Boolean;
+  found: Boolean;
   ParentForm: TCustomForm;
 begin
   if FSelecting then
@@ -729,17 +746,41 @@ begin
         FLastActiveForm := FrmItem.Data;
         if Assigned(ActCtrl) then begin
           if ActCtrl <> FrmItem.Data then begin
-            Found := False;
-            SelectFocusedControl(ActCtrl, FrmItem, Found);
+            found := False;
+            SelectFocusedControl(ActCtrl, FrmItem, found);
           end;
         end;
-        break;
+        Break;
       end;
     end;
   finally
     tv_Forms.Items.EndUpdate;
     FSelecting := False;
   end;
+end;
+
+procedure TExplorerForm.tim_CheckHookTimer(Sender: TObject);
+begin
+{$IFDEF DELPHIX_RIO_UP}
+  tim_CheckHook.Enabled := False;
+  try
+    if IsHookScreenActiveControlChangeActive(FActiveControlChangedHook) then begin
+      tim_CheckHook.Interval := 500;
+      if FWasHookDeactivated then begin
+        FWasHookDeactivated := False;
+        FActiveDelphiForm := nil;
+        FActiveDelphiControl := nil;
+        UpdateActiveDelphiForm;
+      end;
+    end else begin
+      FWasHookDeactivated := True;
+      tim_CheckHook.Interval := 100;
+      UpdateActiveDelphiForm;
+    end;
+  finally
+    tim_CheckHook.Enabled := True;
+  end;
+{$ENDIF}
 end;
 
 procedure TExplorerForm.tv_FormsChange(Sender: TObject; Node: TTreeNode);
@@ -852,8 +893,8 @@ begin
                 ValueStr := '<DynArray>';
 {$IFDEF Delphi2009_Up}
               tkUString: begin
-                ValueStr := GetUnicodeStrProp(_Node.Data, PropList[i]);
-              end;
+                  ValueStr := GetUnicodeStrProp(_Node.Data, PropList[i]);
+                end;
 {$ENDIF Delphi2009_Up}
 {$IFDEF Delphi2010_Up}
               tkClassRef:
@@ -943,7 +984,7 @@ begin
   end;
 end;
 
-procedure TExplorerForm.UpdateParents(_ctrl: TControl);
+procedure TExplorerForm.UpdateParents(_Ctrl: TControl);
 var
   PNode: TTreeNode;
   strList: TStringList;
@@ -954,16 +995,16 @@ begin
   PNode := nil;
   strList := TStringList.Create;
   try
-    while _ctrl <> nil do begin
+    while _Ctrl <> nil do begin
       CtrlIdxStr := '';
-      if Assigned(_ctrl.Parent) then begin
-        for i := 0 to _ctrl.Parent.ControlCount - 1 do begin
-          if _ctrl.Parent.Controls[i] = _ctrl then
+      if Assigned(_Ctrl.Parent) then begin
+        for i := 0 to _Ctrl.Parent.ControlCount - 1 do begin
+          if _Ctrl.Parent.Controls[i] = _Ctrl then
             CtrlIdxStr := '[' + IntToStr(i) + '] ';
         end;
       end;
-      strList.Insert(0, CtrlIdxStr + _ctrl.Name + ': ' + _ctrl.ClassName);
-      _ctrl := _ctrl.Parent;
+      strList.Insert(0, CtrlIdxStr + _Ctrl.Name + ': ' + _Ctrl.ClassName);
+      _Ctrl := _Ctrl.Parent;
     end;
     for i := 0 to strList.Count - 1 do begin
       PNode := tv_Additional.Items.AddChild(PNode, strList[i]);
