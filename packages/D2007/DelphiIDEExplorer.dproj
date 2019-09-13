@@ -1,192 +1,111 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <PropertyGroup>
-        <Base>True</Base>
-        <AppType>Package</AppType>
-        <Config Condition="'$(Config)'==''">Debug</Config>
-        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-        <DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
-        <DCC_DependencyCheckOutputName>C:\Users\Public\Documents\RAD Studio\5.0\Bpl\DelphiIDEExplorer110.bpl</DCC_DependencyCheckOutputName>
-        <FrameworkType>VCL</FrameworkType>
-        <MainSource>DelphiIDEExplorer.dpk</MainSource>
-        <Platform Condition="'$(Platform)'==''">Win32</Platform>
-        <ProjectGuid>{809b1afa-f292-4400-b94f-b368f97120e7}</ProjectGuid>
-        <ProjectVersion>17.2</ProjectVersion>
-        <TargetedPlatforms>1</TargetedPlatforms>
-    </PropertyGroup>
-    <PropertyGroup Condition="('$(Platform)'=='Android' and '$(Base)'=='true') or '$(Base_Android)'!=''">
-        <Base>true</Base>
-        <CfgParent>Base</CfgParent>
-        <Base_Android>true</Base_Android>
-    </PropertyGroup>
-    <PropertyGroup Condition="('$(Platform)'=='Win64' and '$(Base)'=='true') or '$(Base_Win64)'!=''">
-        <Base>true</Base>
-        <CfgParent>Base</CfgParent>
-        <Base_Win64>true</Base_Win64>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
-        <Base>true</Base>
-    </PropertyGroup>
-    <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Base)'=='true') or '$(Base_Win32)'!=''">
-        <Base>true</Base>
-        <CfgParent>Base</CfgParent>
-        <Base_Win32>true</Base_Win32>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Config)'=='Release' or '$(Cfg_1)'!=''">
-        <Base>true</Base>
-        <CfgParent>Base</CfgParent>
-        <Cfg_1>true</Cfg_1>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Config)'=='Debug' or '$(Cfg_2)'!=''">
-        <Base>true</Base>
-        <CfgParent>Base</CfgParent>
-        <Cfg_2>true</Cfg_2>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Base_Android)'!=''">
-        <BT_BuildType>Debug</BT_BuildType>
-        <EnabledSysJars>android-support-v4.dex.jar;apk-expansion.dex.jar;cloud-messaging.dex.jar;fmx.dex.jar;google-analytics-v2.dex.jar;google-play-billing.dex.jar;google-play-licensing.dex.jar;google-play-services.dex.jar</EnabledSysJars>
-        <VerInfo_IncludeVerInfo>false</VerInfo_IncludeVerInfo>
-        <VerInfo_Keys>package=com.embarcadero.$(MSBuildProjectName);label=$(MSBuildProjectName);versionCode=1;versionName=1.0.0;persistent=False;restoreAnyVersion=False;installLocation=preferExternal;largeHeap=False;theme=TitleBar;hardwareAccelerated=true;apiKey=</VerInfo_Keys>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Base_Win64)'!=''">
-        <Icon_MainIcon>DelphiIDEExplorer_Icon2.ico</Icon_MainIcon>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Base)'!=''">
-        <SanitizedProjectName>DelphiIDEExplorer</SanitizedProjectName>
-        <DCC_DebugInformation>1</DCC_DebugInformation>
-        <DCC_Define>nodzFmxSupport;DEBUG;$(DCC_Define)</DCC_Define>
-        <DCC_Description>dummzeuch.de Delphi IDE Explorer</DCC_Description>
-        <DCC_ImageBase>00400000</DCC_ImageBase>
-        <DCC_Namespace>Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;System;Xml;Data;Datasnap;Web;Soap;Winapi;System.Win;$(DCC_Namespace)</DCC_Namespace>
-        <DCC_OutputNeverBuildDcps>true</DCC_OutputNeverBuildDcps>
-        <DesignOnlyPackage>true</DesignOnlyPackage>
-        <DllSuffix>110</DllSuffix>
-        <GenDll>true</GenDll>
-        <GenPackage>true</GenPackage>
-        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
-        <VerInfo_Locale>2057</VerInfo_Locale>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Base_Win32)'!=''">
-        <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
-        <Debugger_HostApplication>C:\Delphi\Delphi2007\bin\bds.exe</Debugger_HostApplication>
-        <Icon_MainIcon>DelphiIDEExplorer_Icon2.ico</Icon_MainIcon>
-        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <VerInfo_Locale>1033</VerInfo_Locale>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Cfg_1)'!=''">
-        <DCC_DebugInformation>0</DCC_DebugInformation>
-        <DCC_Define>nodzFmxSupport;RELEASE;$(DCC_Define)</DCC_Define>
-        <DCC_LocalDebugSymbols>False</DCC_LocalDebugSymbols>
-        <DCC_SymbolReferenceInfo>0</DCC_SymbolReferenceInfo>
-        <Version>7.0</Version>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Cfg_2)'!=''">
-        <DCC_DcuOutput>.\dcu</DCC_DcuOutput>
-        <DCC_Define>nodzFmxSupport;DEBUG;$(DCC_Define)</DCC_Define>
-        <DCC_HppOutput>.\dcu</DCC_HppOutput>
-        <DCC_ObjOutput>.\dcu</DCC_ObjOutput>
-        <DCC_SYMBOL_PLATFORM>False</DCC_SYMBOL_PLATFORM>
-        <DCC_UNIT_PLATFORM>False</DCC_UNIT_PLATFORM>
-        <DCC_UnitAlias>WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;VCL.Forms=Forms;System.Classes=Classes;VCL.StdCtrls=StdCtrls;VCL.Menus=Menus;VCL.Buttons=Buttons;VCL.Dialogs=Dialogs;VCL.ActnList=ActnList;VCL.ExtCtrls=ExtCtrls;System.SysUtils=SysUtils;WinApi.Windows=Windows;Winapi.Messages=Messages;VCL.Graphics=Graphics;VCL.Controls=Controls;VCL.ComCtrls=ComCtrls;VCL.ImgList=ImgList;System.TypInfo=TypInfo;System.Variants=Variants;System.Win.Registry=Registry;System.StrUtils=StrUtils;System.Rtti=Rtti;System.Types=Types;System.Contnrs=Contnrs;ImageList=Controls;Actions=ActnList;$(DCC_UnitAlias)</DCC_UnitAlias>
-        <Version>7.0</Version>
-    </PropertyGroup>
-    <ProjectExtensions>
-        <Borland.Personality>Delphi.Personality.12</Borland.Personality>
-        <Borland.ProjectType>Package</Borland.ProjectType>
-        <BorlandProject>
-            <Delphi.Personality>
-                <Parameters>
-                    <Parameters Name="UseLauncher">False</Parameters>
-                    <Parameters Name="LoadAllSymbols">True</Parameters>
-                    <Parameters Name="LoadUnspecifiedSymbols">False</Parameters>
-                    <Parameters Name="HostApplication">C:\Delphi\Delphi2007\bin\bds.exe</Parameters>
-                </Parameters>
-                <VersionInfo>
-                    <VersionInfo Name="IncludeVerInfo">True</VersionInfo>
-                    <VersionInfo Name="AutoIncBuild">False</VersionInfo>
-                    <VersionInfo Name="MajorVer">1</VersionInfo>
-                    <VersionInfo Name="MinorVer">0</VersionInfo>
-                    <VersionInfo Name="Release">0</VersionInfo>
-                    <VersionInfo Name="Build">0</VersionInfo>
-                    <VersionInfo Name="Debug">False</VersionInfo>
-                    <VersionInfo Name="PreRelease">False</VersionInfo>
-                    <VersionInfo Name="Special">False</VersionInfo>
-                    <VersionInfo Name="Private">False</VersionInfo>
-                    <VersionInfo Name="DLL">False</VersionInfo>
-                    <VersionInfo Name="Locale">2057</VersionInfo>
-                    <VersionInfo Name="CodePage">1252</VersionInfo>
-                </VersionInfo>
-                <VersionInfoKeys>
-                    <VersionInfoKeys Name="CompanyName"/>
-                    <VersionInfoKeys Name="FileDescription"/>
-                    <VersionInfoKeys Name="FileVersion">1.0.0.0</VersionInfoKeys>
-                    <VersionInfoKeys Name="InternalName"/>
-                    <VersionInfoKeys Name="LegalCopyright"/>
-                    <VersionInfoKeys Name="LegalTrademarks"/>
-                    <VersionInfoKeys Name="OriginalFilename"/>
-                    <VersionInfoKeys Name="ProductName"/>
-                    <VersionInfoKeys Name="ProductVersion">1.0.0.0</VersionInfoKeys>
-                    <VersionInfoKeys Name="Comments"/>
-                </VersionInfoKeys>
-                <Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k100.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp100.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
-                </Excluded_Packages>
-                <Source>
-                    <Source Name="MainSource">DelphiIDEExplorer.dpk</Source>
-                </Source>
-            </Delphi.Personality>
-            <Platforms>
-                <Platform value="Android">False</Platform>
-                <Platform value="Win32">True</Platform>
-                <Platform value="Win64">False</Platform>
-                <Platform value="iOSDevice32">False</Platform>
-                <Platform value="iOSSimulator">False</Platform>
-            </Platforms>
-        </BorlandProject>
-        <ProjectFileVersion>12</ProjectFileVersion>
-    </ProjectExtensions>
-    <Import Project="$(BDS)\Bin\CodeGear.Delphi.Targets"/>
-    <ItemGroup>
-        <DelphiCompile Include="$(MainSource)">
-            <MainSource>MainSource</MainSource>
-        </DelphiCompile>
-        <DCCReference Include="rtl.dcp"/>
-        <DCCReference Include="DesignIde.dcp"/>
-        <DCCReference Include="Vcl.dcp"/>
-        <DCCReference Include="vclx.dcp"/>
-        <DCCReference Include="..\..\src\dzIdeExplorerClassInformation.pas"/>
-        <DCCReference Include="..\..\src\dzIdeExplorerExpert.pas"/>
-        <DCCReference Include="..\..\src\dzIdeExplorerFilterForm.pas">
-            <Form>f_Filter</Form>
-        </DCCReference>
-        <DCCReference Include="..\..\src\dzIdeExplorerMainForm.pas">
-            <Form>ExplorerForm</Form>
-        </DCCReference>
-        <DCCReference Include="..\..\src\dzIdeExplorerMenuTree.pas">
-            <Form>f_MenuTree</Form>
-        </DCCReference>
-        <DCCReference Include="..\..\src\dzIdeExplorerReg.pas"/>
-        <DCCReference Include="..\..\src\dzIdeExplorerUtils.pas"/>
-        <DCCReference Include="..\..\src\dzIdeExplorerVCL.pas"/>
-        <DCCReference Include="..\..\src\dzIdeExplorerBinarySearch.pas"/>
-        <DCCReference Include="..\..\src\dzIdeExplorerdzVclUtils.pas"/>
-        <DCCReference Include="..\..\src\dzIdeExplorerEventHook.pas"/>
-        <RcCompile Include="..\..\src\SplashscreenIcon.rc">
-            <Form>SplashscreenIcon.res</Form>
-        </RcCompile>
-        <BuildConfiguration Include="Base">
-            <Key>Base</Key>
-        </BuildConfiguration>
-        <BuildConfiguration Include="Release">
-            <Key>Cfg_1</Key>
-            <CfgParent>Base</CfgParent>
-        </BuildConfiguration>
-        <BuildConfiguration Include="Debug">
-            <Key>Cfg_2</Key>
-            <CfgParent>Base</CfgParent>
-        </BuildConfiguration>
-    </ItemGroup>
-    <Import Project="$(BDS)\Bin\CodeGear.Delphi.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Delphi.Targets')"/>
-    <Import Project="$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj" Condition="Exists('$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj')"/>
+  <PropertyGroup>
+    <ProjectGuid>{622dbfc0-943d-4f2f-acdc-51589731b0a9}</ProjectGuid>
+    <MainSource>DelphiIDEExplorer.dpk</MainSource>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
+    <DCC_DependencyCheckOutputName>C:\Documents and Settings\All Users\Documents\RAD Studio\5.0\Bpl\DelphiIDEExplorer110.bpl</DCC_DependencyCheckOutputName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <Version>7.0</Version>
+    <DCC_DebugInformation>False</DCC_DebugInformation>
+    <DCC_LocalDebugSymbols>False</DCC_LocalDebugSymbols>
+    <DCC_SymbolReferenceInfo>0</DCC_SymbolReferenceInfo>
+    <DCC_UnitAlias>WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;ImageList=ImgList;Actions=ActnList</DCC_UnitAlias>
+    <DCC_DcuOutput>.\dcu</DCC_DcuOutput>
+    <DCC_ObjOutput>.\dcu</DCC_ObjOutput>
+    <DCC_HppOutput>.\dcu</DCC_HppOutput>
+    <DCC_Define>nodzFmxSupport;RELEASE</DCC_Define>
+    <DCC_SYMBOL_PLATFORM>False</DCC_SYMBOL_PLATFORM>
+    <DCC_UNIT_PLATFORM>False</DCC_UNIT_PLATFORM>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <Version>7.0</Version>
+    <DCC_Define>nodzFmxSupport;DEBUG</DCC_Define>
+    <DCC_UnitAlias>WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;ImageList=ImgList;Actions=ActnList</DCC_UnitAlias>
+    <DCC_DcuOutput>.\dcu</DCC_DcuOutput>
+    <DCC_ObjOutput>.\dcu</DCC_ObjOutput>
+    <DCC_HppOutput>.\dcu</DCC_HppOutput>
+    <DCC_SYMBOL_PLATFORM>False</DCC_SYMBOL_PLATFORM>
+    <DCC_UNIT_PLATFORM>False</DCC_UNIT_PLATFORM>
+  </PropertyGroup>
+  <ProjectExtensions>
+    <Borland.Personality>Delphi.Personality</Borland.Personality>
+    <Borland.ProjectType>Package</Borland.ProjectType>
+    <BorlandProject>
+<BorlandProject xmlns=""> <Delphi.Personality>   <Parameters>
+      <Parameters Name="UseLauncher">False</Parameters>
+      <Parameters Name="LoadAllSymbols">True</Parameters>
+      <Parameters Name="LoadUnspecifiedSymbols">False</Parameters>
+    </Parameters>
+    <Package_Options>
+      <Package_Options Name="PackageDescription">dummzeuch.de Delphi IDE Explorer</Package_Options>
+      <Package_Options Name="ImplicitBuild">False</Package_Options>
+      <Package_Options Name="DesigntimeOnly">True</Package_Options>
+      <Package_Options Name="RuntimeOnly">False</Package_Options>
+      <Package_Options Name="LibSuffix">110</Package_Options>
+    </Package_Options>
+    <VersionInfo>
+      <VersionInfo Name="IncludeVerInfo">True</VersionInfo>
+      <VersionInfo Name="AutoIncBuild">False</VersionInfo>
+      <VersionInfo Name="MajorVer">1</VersionInfo>
+      <VersionInfo Name="MinorVer">0</VersionInfo>
+      <VersionInfo Name="Release">0</VersionInfo>
+      <VersionInfo Name="Build">0</VersionInfo>
+      <VersionInfo Name="Debug">False</VersionInfo>
+      <VersionInfo Name="PreRelease">False</VersionInfo>
+      <VersionInfo Name="Special">False</VersionInfo>
+      <VersionInfo Name="Private">False</VersionInfo>
+      <VersionInfo Name="DLL">False</VersionInfo>
+      <VersionInfo Name="Locale">2057</VersionInfo>
+      <VersionInfo Name="CodePage">1252</VersionInfo>
+    </VersionInfo>
+    <VersionInfoKeys>
+      <VersionInfoKeys Name="CompanyName"></VersionInfoKeys>
+      <VersionInfoKeys Name="FileDescription"></VersionInfoKeys>
+      <VersionInfoKeys Name="FileVersion">1.0.0.0</VersionInfoKeys>
+      <VersionInfoKeys Name="InternalName"></VersionInfoKeys>
+      <VersionInfoKeys Name="LegalCopyright"></VersionInfoKeys>
+      <VersionInfoKeys Name="LegalTrademarks"></VersionInfoKeys>
+      <VersionInfoKeys Name="OriginalFilename"></VersionInfoKeys>
+      <VersionInfoKeys Name="ProductName"></VersionInfoKeys>
+      <VersionInfoKeys Name="ProductVersion">1.0.0.0</VersionInfoKeys>
+      <VersionInfoKeys Name="Comments"></VersionInfoKeys>
+    </VersionInfoKeys>
+    <Source>
+      <Source Name="MainSource">DelphiIDEExplorer.dpk</Source>
+    </Source>
+  </Delphi.Personality> </BorlandProject></BorlandProject>
+  </ProjectExtensions>
+  <Import Project="$(MSBuildBinPath)\Borland.Delphi.Targets" />
+  <ItemGroup>
+    <DelphiCompile Include="DelphiIDEExplorer.dpk">
+      <MainSource>MainSource</MainSource>
+    </DelphiCompile>
+    <DCCReference Include="DesignIde.dcp" />
+    <DCCReference Include="rtl.dcp" />
+    <DCCReference Include="Vcl.dcp" />
+    <DCCReference Include="vclx.dcp" />
+    <DCCReference Include="..\..\src\dzIdeExplorerBinarySearch.pas" />
+    <DCCReference Include="..\..\src\dzIdeExplorerClassInformation.pas" />
+    <DCCReference Include="..\..\src\dzIdeExplorerdzVclUtils.pas" />
+    <DCCReference Include="..\..\src\dzIdeExplorerEventHook.pas" />
+    <DCCReference Include="..\..\src\dzIdeExplorerExpert.pas" />
+    <DCCReference Include="..\..\src\dzIdeExplorerFilterForm.pas">
+      <Form>f_Filter</Form>
+    </DCCReference>
+    <DCCReference Include="..\..\src\dzIdeExplorerMainForm.pas">
+      <Form>ExplorerForm</Form>
+    </DCCReference>
+    <DCCReference Include="..\..\src\dzIdeExplorerMenuTree.pas">
+      <Form>f_MenuTree</Form>
+    </DCCReference>
+    <DCCReference Include="..\..\src\dzIdeExplorerReg.pas" />
+    <DCCReference Include="..\..\src\dzIdeExplorerUtils.pas" />
+    <DCCReference Include="..\..\src\dzIdeExplorerVCL.pas" />
+    <RcCompile Include="..\..\src\SplashscreenIcon.rc">
+      <Form>SplashscreenIcon.res</Form>
+    </RcCompile>
+  </ItemGroup>
 </Project>
