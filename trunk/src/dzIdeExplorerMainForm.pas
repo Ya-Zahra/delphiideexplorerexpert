@@ -24,7 +24,7 @@ uses
   ImgList,
   StdCtrls,
   Menus,
-// Imagelist is new in Delphi 10 Seattle, for older verions
+// Imagelist is new in Delphi 10 Seattle, for older versions
 // add a unit alias as ImageList=Controls
   ImageList,
   ActnList,
@@ -893,7 +893,11 @@ begin
                 ValueStr := '<DynArray>';
 {$IFDEF Delphi2009_Up}
               tkUString: begin
+{$IFDEF DELPHIX_SYDNEY_UP}
+                  ValueStr := GetStrProp(_Node.Data, PropList[i]);
+{$ELSE}
                   ValueStr := GetUnicodeStrProp(_Node.Data, PropList[i]);
+{$ENDIF}
                 end;
 {$ENDIF Delphi2009_Up}
 {$IFDEF Delphi2010_Up}
