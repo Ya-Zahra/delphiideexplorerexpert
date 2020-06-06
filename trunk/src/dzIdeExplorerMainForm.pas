@@ -79,7 +79,9 @@ type
     procedure lv_PropertiesInfoTip(Sender: TObject; Item: TListItem; var InfoTip: string);
     procedure tim_CheckHookTimer(Sender: TObject);
   private
+{$IFDEF DELPHIX_RIO_UP}
     FWasHookDeactivated: Boolean;
+{$ENDIF}
     FSelecting: Boolean;
     FActiveControlChangedHook: TNotifyEventHook;
     FFollowFocusEnabled: Boolean;
@@ -893,7 +895,7 @@ begin
                 ValueStr := '<DynArray>';
 {$IFDEF Delphi2009_Up}
               tkUString: begin
-{$IFDEF DELPHIX_SYDNEY_UP}
+{$IFDEF DELPHIX_TOKYO_UP}
                   ValueStr := GetStrProp(_Node.Data, PropList[i]);
 {$ELSE}
                   ValueStr := GetUnicodeStrProp(_Node.Data, PropList[i]);
