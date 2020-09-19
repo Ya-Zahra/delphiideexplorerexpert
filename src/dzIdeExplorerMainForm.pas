@@ -435,36 +435,61 @@ procedure Tf_dzIdeExplorerMain.FillTree;
   end;
 
   function AddComponents(_Parent: TTreeNode; _Component: TComponent): Integer;
-  var
-    i: Integer;
-    Node: TTreeNode;
-    cmp: TComponent;
-    HasChildren: Boolean;
-    IsClassVisible: Boolean;
-    ci: TClassInformation;
-  begin
-    Result := 0;
-    for i := 0 to _Component.ComponentCount - 1 do begin
-      cmp := _Component.Components[i];
-      HasChildren := (cmp.ComponentCount > 0);
-      if FClassInfo.Find(cmp.ClassName, ci) then
+
+    procedure HandleComponent(_Parent: TTreeNode; _cmp: TComponent);
+    var
+      HasChildren: Boolean;
+      IsClassVisible: Boolean;
+      ci: TClassInformation;
+      Node: TTreeNode;
+    begin
+      HasChildren := (_cmp.ComponentCount > 0);
+      if FClassInfo.Find(_cmp.ClassName, ci) then
         IsClassVisible := ci.IsVisible
       else begin
-        ci := TClassInformation.Create(cmp.ClassName, cmp.ClassType, True);
+        ci := TClassInformation.Create(_cmp.ClassName, _cmp.ClassType, True);
         FClassInfo.Add(ci);
         IsClassVisible := True;
       end;
       if IsClassVisible or HasChildren then begin
         Inc(Result);
         Node := tv_Forms.Items.AddChild(_Parent,
-          cmp.Name + ': ' + cmp.ClassName + ' (' + IntToStr(cmp.ComponentCount) + ')');
-        Node.Data := Pointer(cmp);
+          _cmp.Name + ': ' + _cmp.ClassName + ' (' + IntToStr(_cmp.ComponentCount) + ')');
+        Node.Data := Pointer(_cmp);
         Node.ImageIndex := 3;
         Node.SelectedIndex := 3;
-        if (AddComponents(Node, cmp) = 0) and not IsClassVisible then begin
+        if (AddComponents(Node, _cmp) = 0) and not IsClassVisible then begin
           tv_Forms.Items.Delete(Node);
           Dec(Result);
         end;
+      end;
+    end;
+
+  var
+    i: Integer;
+    cmp: TComponent;
+    ctrl: TWinControl;
+  begin
+    // todo: the Owner / owned component relationship is less useful than the
+    // Parent / contained control relationship because the latter is what the
+    // user actually can see.
+    // May be we shuld show that in the tree view?
+    // But then we would not show non-controls.
+    // In the mean time we show onwned components and also non-owned controls (see below).
+    Result := 0;
+    for i := 0 to _Component.ComponentCount - 1 do begin
+      cmp := _Component.Components[i];
+      HandleComponent(_Parent, cmp);
+    end;
+
+    // apparently the IDE now uses controls that do not have an owner but only a parent
+    // e.g. in the old style component palette
+    if _Component is TWinControl then begin
+      ctrl := TWinControl(_Component);
+      for i := 0 to ctrl.ControlCount - 1 do begin
+        cmp := ctrl.Controls[i];
+        if cmp.Owner = nil then
+          HandleComponent(_Parent, cmp);
       end;
     end;
   end;
