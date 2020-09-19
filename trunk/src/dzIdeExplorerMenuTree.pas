@@ -18,7 +18,7 @@ uses
   ComCtrls;
 
 type
-  Tf_IdeExplorerMenuTree = class(TForm)
+  Tf_dzIdeExplorerMenuTree = class(TForm)
     tv_Menu: TTreeView;
   protected
     procedure ActionExecute(_Sender: TObject);
@@ -36,7 +36,7 @@ uses
 
 { Tf_MenuTree }
 
-constructor Tf_IdeExplorerMenuTree.Create(_Owner: TComponent);
+constructor Tf_dzIdeExplorerMenuTree.Create(_Owner: TComponent);
 var
   i: Integer;
   j: Integer;
@@ -77,12 +77,12 @@ begin
   end;
 end;
 
-procedure Tf_IdeExplorerMenuTree.ActionExecute(_Sender: TObject);
+procedure Tf_dzIdeExplorerMenuTree.ActionExecute(_Sender: TObject);
 begin
   ShowMessage(TAction(_Sender).Name + ' was executed');
 end;
 
-procedure Tf_IdeExplorerMenuTree.AddMenuItem(_Parent: TTreeNode; _Item: TMenuItem);
+procedure Tf_dzIdeExplorerMenuTree.AddMenuItem(_Parent: TTreeNode; _Item: TMenuItem);
 var
   Node: TTreeNode;
   i: Integer;

@@ -1,9 +1,9 @@
-object ExplorerForm: TExplorerForm
+object f_dzIdeExplorerMain: Tf_dzIdeExplorerMain
   Left = 337
   Top = 202
+  Width = 800
+  Height = 353
   Caption = 'Delphi IDE Explorer'
-  ClientHeight = 314
-  ClientWidth = 617
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -16,26 +16,28 @@ object ExplorerForm: TExplorerForm
   PixelsPerInch = 96
   TextHeight = 13
   object TheSplitter: TSplitter
-    Left = 325
+    Left = 385
     Top = 0
+    Width = 3
     Height = 295
+    Cursor = crHSplit
   end
   object p_Left: TPanel
     Left = 0
     Top = 0
-    Width = 325
+    Width = 385
     Height = 295
     Align = alLeft
     TabOrder = 0
     object p_LeftTop: TPanel
       Left = 1
       Top = 1
-      Width = 323
+      Width = 383
       Height = 30
       Align = alTop
       TabOrder = 1
       object b_Filter: TButton
-        Left = 4
+        Left = 2
         Top = 1
         Width = 61
         Height = 25
@@ -44,7 +46,7 @@ object ExplorerForm: TExplorerForm
         OnClick = b_FilterClick
       end
       object b_Update: TButton
-        Left = 72
+        Left = 130
         Top = 1
         Width = 57
         Height = 25
@@ -53,8 +55,8 @@ object ExplorerForm: TExplorerForm
         OnClick = b_UpdateClick
       end
       object chk_Follow: TCheckBox
-        Left = 216
-        Top = 5
+        Left = 286
+        Top = 6
         Width = 97
         Height = 17
         Caption = 'Follow Focus'
@@ -62,19 +64,28 @@ object ExplorerForm: TExplorerForm
         OnClick = chk_FollowClick
       end
       object b_SelectActive: TButton
-        Left = 136
+        Left = 188
         Top = 1
-        Width = 75
+        Width = 95
         Height = 25
         Caption = 'Select Active'
         TabOrder = 2
         OnClick = b_SelectActiveClick
       end
+      object b_Search: TButton
+        Left = 64
+        Top = 1
+        Width = 65
+        Height = 25
+        Caption = 'Search ...'
+        TabOrder = 4
+        OnClick = b_SearchClick
+      end
     end
     object tv_Forms: TTreeView
       Left = 1
       Top = 31
-      Width = 323
+      Width = 383
       Height = 263
       Align = alClient
       HideSelection = False
@@ -88,19 +99,20 @@ object ExplorerForm: TExplorerForm
     end
   end
   object pc_Details: TPageControl
-    Left = 328
+    Left = 388
     Top = 0
-    Width = 289
+    Width = 396
     Height = 295
     ActivePage = ts_Properties
     Align = alClient
+    TabIndex = 0
     TabOrder = 1
     object ts_Properties: TTabSheet
       Caption = '&Properties'
       object lv_Properties: TListView
         Left = 0
         Top = 0
-        Width = 281
+        Width = 388
         Height = 267
         Align = alClient
         Columns = <
@@ -118,7 +130,7 @@ object ExplorerForm: TExplorerForm
           end
           item
             Caption = 'Value'
-            Width = 125
+            Width = 106
           end>
         HideSelection = False
         ReadOnly = True
@@ -137,8 +149,8 @@ object ExplorerForm: TExplorerForm
       object lv_Events: TListView
         Left = 0
         Top = 0
-        Width = 281
-        Height = 267
+        Width = 371
+        Height = 264
         Align = alClient
         Columns = <
           item
@@ -170,7 +182,7 @@ object ExplorerForm: TExplorerForm
       object tv_Hierarchy: TTreeView
         Left = 0
         Top = 0
-        Width = 281
+        Width = 388
         Height = 267
         Align = alClient
         Images = im_Controls
@@ -185,7 +197,7 @@ object ExplorerForm: TExplorerForm
       object tv_Additional: TTreeView
         Left = 0
         Top = 0
-        Width = 281
+        Width = 388
         Height = 267
         Align = alClient
         Images = im_Controls
@@ -199,7 +211,7 @@ object ExplorerForm: TExplorerForm
   object TheStatusBar: TStatusBar
     Left = 0
     Top = 295
-    Width = 617
+    Width = 784
     Height = 19
     Panels = <>
     SimplePanel = True

@@ -44,9 +44,11 @@ contains
   dzIdeExplorerMenuTree in '..\..\src\dzIdeExplorerMenuTree.pas' {f_MenuTree},
   dzIdeExplorerReg in '..\..\src\dzIdeExplorerReg.pas',
   dzIdeExplorerUtils in '..\..\src\dzIdeExplorerUtils.pas',
-  dzIdeExplorerFMX in '..\..\src\dzIdeExplorerFMX.pas',
   dzIdeExplorerVCL in '..\..\src\dzIdeExplorerVCL.pas',
+  dzIdeExplorerFMX in '..\..\src\dzIdeExplorerFMX.pas',
+  dzIdeExplorerBinarySearch in '..\..\src\dzIdeExplorerBinarySearch.pas',
+  dzIdeExplorerdzVclUtils in '..\..\src\dzIdeExplorerdzVclUtils.pas',
   dzIdeExplorerEventHook in '..\..\src\dzIdeExplorerEventHook.pas',
-  dzIdeExplorerdzVclUtils in '..\..\src\dzIdeExplorerdzVclUtils.pas';
+  dzIdeExplorerSearchForm in '..\..\src\dzIdeExplorerSearchForm.pas' {f_dzIdeExplorerSearch};
 
 end.

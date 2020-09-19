@@ -1,4 +1,4 @@
-object f_IdeExplorerMenuTree: Tf_IdeExplorerMenuTree
+object f_dzIdeExplorerMenuTree: Tf_dzIdeExplorerMenuTree
   Left = 0
   Top = 0
   Caption = 'Menu Tree'

@@ -43,7 +43,8 @@ contains
   dzIdeExplorerVCL in '..\..\src\dzIdeExplorerVCL.pas',
   dzIdeExplorerBinarySearch in '..\..\src\dzIdeExplorerBinarySearch.pas',
   dzIdeExplorerdzVclUtils in '..\..\src\dzIdeExplorerdzVclUtils.pas',
-  dzIdeExplorerEventHook in '..\..\src\dzIdeExplorerEventHook.pas';
+  dzIdeExplorerEventHook in '..\..\src\dzIdeExplorerEventHook.pas',
+  dzIdeExplorerSearchForm in '..\..\src\dzIdeExplorerSearchForm.pas' {f_dzIdeExplorerSearch};
 
 end.
 
