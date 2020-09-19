@@ -159,6 +159,8 @@ begin
   p_LeftTop.BevelOuter := bvNone;
   pc_Details.ActivePage := ts_Properties;
 
+  FSearchOptions := [csoComponentName, csoRecursive];
+
   FClassInfo := TClassInfoList.Create;
   FValueHints := TStringList.Create;
 
