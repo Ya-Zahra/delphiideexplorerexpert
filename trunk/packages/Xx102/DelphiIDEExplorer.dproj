@@ -19,31 +19,31 @@
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Base)'=='true') or '$(Base_Win32)'!=''">
-        <Base_Win32>true</Base_Win32>
-        <CfgParent>Base</CfgParent>
         <Base>true</Base>
+        <CfgParent>Base</CfgParent>
+        <Base_Win32>true</Base_Win32>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Release' or '$(Cfg_1)'!=''">
-        <Cfg_1>true</Cfg_1>
-        <CfgParent>Base</CfgParent>
         <Base>true</Base>
+        <CfgParent>Base</CfgParent>
+        <Cfg_1>true</Cfg_1>
     </PropertyGroup>
     <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Cfg_1)'=='true') or '$(Cfg_1_Win32)'!=''">
-        <Cfg_1_Win32>true</Cfg_1_Win32>
+        <Base>true</Base>
         <CfgParent>Cfg_1</CfgParent>
         <Cfg_1>true</Cfg_1>
-        <Base>true</Base>
+        <Cfg_1_Win32>true</Cfg_1_Win32>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Debug' or '$(Cfg_2)'!=''">
-        <Cfg_2>true</Cfg_2>
-        <CfgParent>Base</CfgParent>
         <Base>true</Base>
+        <CfgParent>Base</CfgParent>
+        <Cfg_2>true</Cfg_2>
     </PropertyGroup>
     <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Cfg_2)'=='true') or '$(Cfg_2_Win32)'!=''">
-        <Cfg_2_Win32>true</Cfg_2_Win32>
+        <Base>true</Base>
         <CfgParent>Cfg_2</CfgParent>
         <Cfg_2>true</Cfg_2>
-        <Base>true</Base>
+        <Cfg_2_Win32>true</Cfg_2_Win32>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win64)'!=''">
         <DCC_UsePackage>vcl;fmx;$(DCC_UsePackage)</DCC_UsePackage>
@@ -94,7 +94,6 @@
         <DCC_Optimize>false</DCC_Optimize>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
-        <DllSuffix>250</DllSuffix>
         <VerInfo_Keys>CompanyName=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
         <VerInfo_Locale>1033</VerInfo_Locale>
     </PropertyGroup>
@@ -102,24 +101,26 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="Vcl.dcp"/>
-        <DCCReference Include="FMX.dcp"/>
+        <DCCReference Include="rtl.dcp"/>
         <DCCReference Include="DesignIde.dcp"/>
-        <DCCReference Include="..\..\src\dzIdeExplorerExpert.pas"/>
-        <DCCReference Include="..\..\src\dzIdeExplorerReg.pas"/>
-        <DCCReference Include="..\..\src\dzIdeExplorerMenuTree.pas">
-            <Form>f_dzIdeExplorerMenuTree</Form>
-        </DCCReference>
-        <DCCReference Include="..\..\src\dzIdeExplorerFilterForm.pas">
-            <Form>f_dzIdeExplorerFilter</Form>
-        </DCCReference>
+        <DCCReference Include="Vcl.dcp"/>
+        <DCCReference Include="fmx.dcp"/>
         <DCCReference Include="..\..\src\dzIdeExplorerClassInformation.pas"/>
-        <DCCReference Include="..\..\src\dzIdeExplorerMainForm.pas">
-            <Form>f_dzIdeExplorerMain</Form>
+        <DCCReference Include="..\..\src\dzIdeExplorerExpert.pas"/>
+        <DCCReference Include="..\..\src\dzIdeExplorerFilterForm.pas">
+            <Form>f_Filter</Form>
         </DCCReference>
+        <DCCReference Include="..\..\src\dzIdeExplorerMainForm.pas">
+            <Form>ExplorerForm</Form>
+        </DCCReference>
+        <DCCReference Include="..\..\src\dzIdeExplorerMenuTree.pas">
+            <Form>f_MenuTree</Form>
+        </DCCReference>
+        <DCCReference Include="..\..\src\dzIdeExplorerReg.pas"/>
         <DCCReference Include="..\..\src\dzIdeExplorerUtils.pas"/>
         <DCCReference Include="..\..\src\dzIdeExplorerVCL.pas"/>
         <DCCReference Include="..\..\src\dzIdeExplorerFMX.pas"/>
+        <DCCReference Include="..\..\src\dzIdeExplorerBinarySearch.pas"/>
         <DCCReference Include="..\..\src\dzIdeExplorerdzVclUtils.pas"/>
         <DCCReference Include="..\..\src\dzIdeExplorerEventHook.pas"/>
         <DCCReference Include="..\..\src\dzIdeExplorerSearchForm.pas">

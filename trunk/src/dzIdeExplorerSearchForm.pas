@@ -15,7 +15,8 @@ uses
   ExtCtrls;
 
 type
-  TSearchType = (stComponentName, stTypeName);
+  TComponentSearchOptions = (csoComponentName, csoTypeName, csoRecursive, csoEntireScope);
+  TComponentSearchOptionSet = set of TComponentSearchOptions;
 
 type
   Tf_dzIdeExplorerSearch = class(TForm)
@@ -25,12 +26,14 @@ type
     rb_TypeName: TRadioButton;
     b_Ok: TButton;
     b_Cancel: TButton;
-    chk_: TCheckBox;
+    chk_Recursive: TCheckBox;
+    chk_EntireScope: TCheckBox;
   private
-    procedure SetData(const _Name: string; _Type: TSearchType);
-    procedure GetData(out _Name: string; out _Type: TSearchType);
+    procedure SetData(const _Name: string; _Options: TComponentSearchOptionSet);
+    procedure GetData(out _Name: string; out _Options: TComponentSearchOptionSet);
   public
-    class function Execute(_Owner: TWinControl; var _Name: string; var _Type: TSearchType): boolean;
+    class function Execute(_Owner: TWinControl;
+      var _Name: string; var _Options: TComponentSearchOptionSet): Boolean;
     constructor Create(_Owner: TComponent); override;
   end;
 
@@ -50,38 +53,46 @@ begin
   Constraints.MaxHeight := Constraints.MinHeight;
 end;
 
-class function Tf_dzIdeExplorerSearch.Execute(_Owner: TWinControl; var _Name: string;
-  var _Type: TSearchType): boolean;
+class function Tf_dzIdeExplorerSearch.Execute(_Owner: TWinControl;
+  var _Name: string; var _Options: TComponentSearchOptionSet): Boolean;
 var
   frm: Tf_dzIdeExplorerSearch;
 begin
   frm := Tf_dzIdeExplorerSearch.Create(_Owner);
   try
-    frm.SetData(_Name, _Type);
+    frm.SetData(_Name, _Options);
     Result := (mrOK = frm.ShowModal);
     if Result then
-      frm.GetData(_Name, _Type);
+      frm.GetData(_Name, _Options);
   finally
     FreeAndNil(frm);
   end;
 end;
 
-procedure Tf_dzIdeExplorerSearch.GetData(out _Name: string; out _Type: TSearchType);
+procedure Tf_dzIdeExplorerSearch.GetData(out _Name: string; out _Options: TComponentSearchOptionSet);
 begin
+
   _Name := ed_Name.Text;
   if rb_ComponentName.Checked then
-    _Type := stComponentName
+    _Options := [csoComponentName]
   else
-    _Type := stTypeName;
+    _Options := [csoTypeName];
+  if chk_Recursive.Checked then
+    Include(_Options, csoRecursive);
+  if chk_EntireScope.Checked then
+    Include(_Options, csoEntireScope);
 end;
 
-procedure Tf_dzIdeExplorerSearch.SetData(const _Name: string; _Type: TSearchType);
+procedure Tf_dzIdeExplorerSearch.SetData(const _Name: string; _Options: TComponentSearchOptionSet);
 begin
   ed_Name.Text := _Name;
-  if _Type = stComponentName then
+  if csoComponentName in _Options then
     rb_ComponentName.Checked := True
   else
     rb_TypeName.Checked := True;
+  chk_Recursive.Checked := (csoRecursive in _Options);
+  chk_EntireScope.Checked := (csoEntireScope in _Options);
 end;
 
 end.
+

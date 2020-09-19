@@ -1,9 +1,9 @@
 object f_dzIdeExplorerMain: Tf_dzIdeExplorerMain
   Left = 337
   Top = 202
-  Width = 800
-  Height = 353
   Caption = 'Delphi IDE Explorer'
+  ClientHeight = 314
+  ClientWidth = 784
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -77,9 +77,8 @@ object f_dzIdeExplorerMain: Tf_dzIdeExplorerMain
         Top = 1
         Width = 65
         Height = 25
-        Caption = 'Search ...'
+        Action = act_FindFirst
         TabOrder = 4
-        OnClick = b_SearchClick
       end
     end
     object tv_Forms: TTreeView
@@ -105,7 +104,6 @@ object f_dzIdeExplorerMain: Tf_dzIdeExplorerMain
     Height = 295
     ActivePage = ts_Properties
     Align = alClient
-    TabIndex = 0
     TabOrder = 1
     object ts_Properties: TTabSheet
       Caption = '&Properties'
@@ -916,5 +914,19 @@ object f_dzIdeExplorerMain: Tf_dzIdeExplorerMain
     OnTimer = tim_CheckHookTimer
     Left = 48
     Top = 40
+  end
+  object TheActionList: TActionList
+    Left = 184
+    Top = 104
+    object act_FindFirst: TAction
+      Caption = 'Find ...'
+      ShortCut = 16454
+      OnExecute = act_FindFirstExecute
+    end
+    object act_FindNext: TAction
+      Caption = 'Find Next'
+      ShortCut = 114
+      OnExecute = act_FindNextExecute
+    end
   end
 end

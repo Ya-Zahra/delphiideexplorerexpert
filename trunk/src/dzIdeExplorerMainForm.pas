@@ -21,13 +21,12 @@ uses
   Dialogs,
   ComCtrls,
   ExtCtrls,
-  ImgList,
   StdCtrls,
   Menus,
-// Imagelist is new in Delphi 10 Seattle, for older versions
-// add a unit alias as ImageList=Controls
-  ImageList,
+  ImgList,
+  ImageList, // if you get a compile error here, add ImageList=ImgList to unit aliases
   ActnList,
+  Actions, // if you get a compile error here, add Actions=ActnList to unit aliases
   ActnMan,
   dzIdeExplorerClassInformation,
   dzIdeExplorerEventHook,
@@ -65,7 +64,9 @@ type
     mi_CopyPath: TMenuItem;
     tim_CheckHook: TTimer;
     b_Search: TButton;
-    procedure b_SearchClick(Sender: TObject);
+    TheActionList: TActionList;
+    act_FindFirst: TAction;
+    act_FindNext: TAction;
     procedure FormShow(Sender: TObject);
     procedure tv_FormsChange(Sender: TObject; Node: TTreeNode);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -81,6 +82,8 @@ type
     procedure mi_CopyPathClick(Sender: TObject);
     procedure lv_PropertiesInfoTip(Sender: TObject; Item: TListItem; var InfoTip: string);
     procedure tim_CheckHookTimer(Sender: TObject);
+    procedure act_FindFirstExecute(Sender: TObject);
+    procedure act_FindNextExecute(Sender: TObject);
   private
 {$IFDEF DELPHIX_RIO_UP}
     FWasHookDeactivated: Boolean;
@@ -95,7 +98,7 @@ type
     FVclForms: TTreeNode;
     FClassInfo: TClassInfoList;
     FValueHints: TStringList;
-    FSearchType: TSearchType;
+    FSearchOptions: TComponentSearchOptionSet;
     FSearchText: string;
     procedure FillTree;
     procedure SelectFocused(_Force: Boolean);
@@ -111,6 +114,7 @@ type
     procedure UpdateActionList(_lst: TActionList);
     procedure UpdateActionManager(_mgr: TActionManager);
     procedure UpdateActiveDelphiForm;
+    function doSearch(_Node: TTreeNode): Boolean;
   public
     constructor Create(_Owner: TComponent); override;
     destructor Destroy; override;
@@ -124,7 +128,6 @@ uses
   TypInfo,
   Variants,
   Registry,
-  Actions,
 {$IFDEF HAS_UNIT_RTTI}
   Rtti,
 {$ENDIF HAS_UNIT_RTTI}
@@ -480,13 +483,15 @@ var
   DelphiRoot: TTreeNode;
   i: Integer;
   Node: TTreeNode;
+  Items: TTreeNodes;
 begin
-  tv_Forms.Items.BeginUpdate;
+  Items := tv_Forms.Items;
+  Items.BeginUpdate;
   try
     FVclForms := nil;
-    tv_Forms.Items.Clear;
+    Items.Clear;
 
-    DelphiRoot := tv_Forms.Items.AddChild(nil, 'Delphi IDE');
+    DelphiRoot := Items.AddChild(nil, 'Delphi IDE');
     DelphiRoot.ImageIndex := 0;
     DelphiRoot.SelectedIndex := 0;
 
@@ -522,7 +527,7 @@ begin
     DelphiRoot.Expand(False);
 
   finally
-    tv_Forms.Items.EndUpdate;
+    Items.EndUpdate;
   end;
 end;
 
@@ -1085,37 +1090,61 @@ begin
   end;
 end;
 
-procedure Tf_dzIdeExplorerMain.b_SearchClick(Sender: TObject);
+function Tf_dzIdeExplorerMain.doSearch(_Node: TTreeNode): Boolean;
 var
-  Node: TTreeNode;
   NodeText: string;
   s: string;
   SearchTextU: string;
 begin
-  Node := tv_Forms.Selected;
-  if Node = nil then
-    Exit; //==>
-
-  if not Tf_dzIdeExplorerSearch.Execute(Self, FSearchText, FSearchType) then
-    Exit; //==>
-
+  Result := True;
   SearchTextU := Uppercase(FSearchText);
-  while Assigned(Node) do begin
-    if Pointer(Node.Data) <> nil then begin
-      case FSearchType of
-        stComponentName:
-          SplitNodeText(Node.Text, NodeText, s);
-        stTypeName:
-          SplitNodeText(Node.Text, s, NodeText);
-      end;
-      if Pos(SearchTextU, UpperCase(NodeText)) > 0 then begin
-        tv_Forms.Select(Node);
+  while Assigned(_Node) do begin
+    if Pointer(_Node.Data) <> nil then begin
+      if csoComponentName in FSearchOptions then
+        SplitNodeText(_Node.Text, NodeText, s)
+      else
+        SplitNodeText(_Node.Text, s, NodeText);
+      if Pos(SearchTextU, Uppercase(NodeText)) > 0 then begin
+        tv_Forms.Select(_Node);
         Exit; //==>
       end;
     end;
-    Node := Node.GetNext;
+    if (csoRecursive in FSearchOptions) then
+      _Node := _Node.GetNext
+    else
+      _Node := _Node.getNextSibling;
   end;
-  ShowMessageFmt(StrSearchStringNotFound, [FSearchText]);
+  Result := False;
+end;
+
+procedure Tf_dzIdeExplorerMain.act_FindFirstExecute(Sender: TObject);
+var
+  Node: TTreeNode;
+begin
+  if not Tf_dzIdeExplorerSearch.Execute(Self, FSearchText, FSearchOptions) then
+    Exit; //==>
+
+  Node := tv_Forms.Selected;
+  if not Assigned(Node) or (csoEntireScope in FSearchOptions) then
+    Node := tv_Forms.Items.GetFirstNode;
+
+  if not doSearch(Node) then
+    ShowMessageFmt(StrSearchStringNotFound, [FSearchText]);
+end;
+
+procedure Tf_dzIdeExplorerMain.act_FindNextExecute(Sender: TObject);
+var
+  Node: TTreeNode;
+begin
+  Node := tv_Forms.Selected;
+  if not Assigned(Node) then
+    Exit; //==>
+  if csoRecursive in FSearchOptions then
+    Node := Node.GetNext
+  else
+    Node := Node.getNextSibling;
+  if not doSearch(Node) then
+    ShowMessageFmt(StrSearchStringNotFound, [FSearchText]);
 end;
 
 procedure Tf_dzIdeExplorerMain.UpdateActionList(_lst: TActionList);
