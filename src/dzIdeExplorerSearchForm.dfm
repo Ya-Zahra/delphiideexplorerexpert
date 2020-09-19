@@ -1,10 +1,10 @@
 object f_dzIdeExplorerSearch: Tf_dzIdeExplorerSearch
   Left = 434
   Top = 251
-  Width = 313
-  Height = 152
   BorderIcons = [biSystemMenu]
   Caption = 'Search'
+  ClientHeight = 145
+  ClientWidth = 297
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -15,7 +15,7 @@ object f_dzIdeExplorerSearch: Tf_dzIdeExplorerSearch
   Position = poOwnerFormCenter
   DesignSize = (
     297
-    113)
+    145)
   PixelsPerInch = 96
   TextHeight = 13
   object SearchForLabel: TLabel
@@ -36,8 +36,8 @@ object f_dzIdeExplorerSearch: Tf_dzIdeExplorerSearch
   end
   object rb_ComponentName: TRadioButton
     Left = 8
-    Top = 60
-    Width = 113
+    Top = 64
+    Width = 121
     Height = 17
     Caption = '&Component name'
     Checked = True
@@ -46,15 +46,15 @@ object f_dzIdeExplorerSearch: Tf_dzIdeExplorerSearch
   end
   object rb_TypeName: TRadioButton
     Left = 8
-    Top = 84
-    Width = 113
+    Top = 88
+    Width = 121
     Height = 17
     Caption = '&Type name'
     TabOrder = 2
   end
   object b_Ok: TButton
     Left = 136
-    Top = 80
+    Top = 112
     Width = 75
     Height = 25
     Anchors = [akRight, akBottom]
@@ -65,7 +65,7 @@ object f_dzIdeExplorerSearch: Tf_dzIdeExplorerSearch
   end
   object b_Cancel: TButton
     Left = 216
-    Top = 80
+    Top = 112
     Width = 75
     Height = 25
     Anchors = [akRight, akBottom]
@@ -74,12 +74,20 @@ object f_dzIdeExplorerSearch: Tf_dzIdeExplorerSearch
     ModalResult = 2
     TabOrder = 4
   end
-  object chk_: TCheckBox
-    Left = 136
-    Top = 56
-    Width = 97
+  object chk_Recursive: TCheckBox
+    Left = 144
+    Top = 64
+    Width = 145
     Height = 17
-    Caption = 'Recursively'
+    Caption = '&Recursively'
     TabOrder = 5
+  end
+  object chk_EntireScope: TCheckBox
+    Left = 144
+    Top = 88
+    Width = 145
+    Height = 17
+    Caption = '&Entire Scope'
+    TabOrder = 6
   end
 end
