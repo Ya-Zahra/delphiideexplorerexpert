@@ -16,7 +16,7 @@ uses
   dzIdeExplorerClassInformation;
 
 type
-  Tf_IdeExplorerFilterForm = class(TForm)
+  Tf_dzIdeExplorerFilter = class(TForm)
     b_Ok: TButton;
     b_Cancel: TButton;
     lb_Visible: TListBox;
@@ -54,11 +54,11 @@ implementation
 uses
   dzIdeExplorerUtils;
 
-class function Tf_IdeExplorerFilterForm.Execute(_Owner: TWinControl; _Items: TClassInfoList): boolean;
+class function Tf_dzIdeExplorerFilter.Execute(_Owner: TWinControl; _Items: TClassInfoList): boolean;
 var
-  frm: Tf_IdeExplorerFilterForm;
+  frm: Tf_dzIdeExplorerFilter;
 begin
-  frm := Tf_IdeExplorerFilterForm.Create(_Owner);
+  frm := Tf_dzIdeExplorerFilter.Create(_Owner);
   try
     TForm_CenterOn(frm, _Owner);
     frm.SetData(_Items);
@@ -70,13 +70,13 @@ begin
   end;
 end;
 
-constructor Tf_IdeExplorerFilterForm.Create(_Owner: TComponent);
+constructor Tf_dzIdeExplorerFilter.Create(_Owner: TComponent);
 begin
   inherited;
   TForm_SetMinConstraints(Self);
 end;
 
-procedure Tf_IdeExplorerFilterForm.FormResize(Sender: TObject);
+procedure Tf_dzIdeExplorerFilter.FormResize(Sender: TObject);
 var
   Space: integer;
   ListboxWidth: integer;
@@ -98,7 +98,7 @@ begin
   lb_Hidden.Left := w;
 end;
 
-procedure Tf_IdeExplorerFilterForm.GetData(_Items: TClassInfoList);
+procedure Tf_dzIdeExplorerFilter.GetData(_Items: TClassInfoList);
 var
   i: Integer;
   s: string;
@@ -116,7 +116,7 @@ begin
   end;
 end;
 
-procedure Tf_IdeExplorerFilterForm.SetData(_Items: TClassInfoList);
+procedure Tf_dzIdeExplorerFilter.SetData(_Items: TClassInfoList);
 var
   i: Integer;
   Item: TClassInformation;
@@ -131,7 +131,7 @@ begin
   EnableButtons;
 end;
 
-procedure Tf_IdeExplorerFilterForm.b_HideClick(Sender: TObject);
+procedure Tf_dzIdeExplorerFilter.b_HideClick(Sender: TObject);
 var
   Index: Integer;
 begin
@@ -140,7 +140,7 @@ begin
   SetItem(lb_Visible, Index);
 end;
 
-procedure Tf_IdeExplorerFilterForm.b_ShowClick(Sender: TObject);
+procedure Tf_dzIdeExplorerFilter.b_ShowClick(Sender: TObject);
 var
   Index: Integer;
 begin
@@ -149,7 +149,7 @@ begin
   SetItem(lb_Hidden, Index);
 end;
 
-procedure Tf_IdeExplorerFilterForm.b_HideAllClick(Sender: TObject);
+procedure Tf_dzIdeExplorerFilter.b_HideAllClick(Sender: TObject);
 var
   I: Integer;
 begin
@@ -160,7 +160,7 @@ begin
   SetItem(lb_Visible, 0);
 end;
 
-procedure Tf_IdeExplorerFilterForm.b_ShowAllClick(Sender: TObject);
+procedure Tf_dzIdeExplorerFilter.b_ShowAllClick(Sender: TObject);
 var
   I: Integer;
 begin
@@ -170,7 +170,7 @@ begin
   SetItem(lb_Hidden, 0);
 end;
 
-procedure Tf_IdeExplorerFilterForm.MoveSelected(List: TCustomListBox; Items: TStrings);
+procedure Tf_dzIdeExplorerFilter.MoveSelected(List: TCustomListBox; Items: TStrings);
 var
   I: Integer;
 begin
@@ -181,7 +181,7 @@ begin
     end;
 end;
 
-procedure Tf_IdeExplorerFilterForm.EnableButtons;
+procedure Tf_dzIdeExplorerFilter.EnableButtons;
 var
   VisibleEmpty, HiddenEmpty: Boolean;
 begin
@@ -193,7 +193,7 @@ begin
   b_ShowAll.Enabled := not HiddenEmpty;
 end;
 
-function Tf_IdeExplorerFilterForm.GetFirstSelection(List: TCustomListBox): Integer;
+function Tf_dzIdeExplorerFilter.GetFirstSelection(List: TCustomListBox): Integer;
 begin
   for Result := 0 to List.Items.Count - 1 do
     if List.Selected[Result] then
@@ -201,7 +201,7 @@ begin
   Result := LB_ERR;
 end;
 
-procedure Tf_IdeExplorerFilterForm.lb_HiddenDblClick(Sender: TObject);
+procedure Tf_dzIdeExplorerFilter.lb_HiddenDblClick(Sender: TObject);
 var
   Index: Integer;
 begin
@@ -210,7 +210,7 @@ begin
   SetItem(lb_Hidden, Index);
 end;
 
-procedure Tf_IdeExplorerFilterForm.lb_VisibleDblClick(Sender: TObject);
+procedure Tf_dzIdeExplorerFilter.lb_VisibleDblClick(Sender: TObject);
 var
   Index: Integer;
 begin
@@ -219,7 +219,7 @@ begin
   SetItem(lb_Visible, Index);
 end;
 
-procedure Tf_IdeExplorerFilterForm.SetItem(List: TListBox; Index: Integer);
+procedure Tf_dzIdeExplorerFilter.SetItem(List: TListBox; Index: Integer);
 var
   MaxIndex: Integer;
 begin

@@ -31,22 +31,25 @@ package DelphiIDEExplorer;
 {$IMPLICITBUILD OFF}
 
 requires
-  Vcl,
+  rtl,
   DesignIde,
+  Vcl,
   fmx;
 
 contains
-  dzIdeExplorerExpert in '..\..\src\dzIdeExplorerExpert.pas',
-  dzIdeExplorerReg in '..\..\src\dzIdeExplorerReg.pas',
-  dzIdeExplorerMenuTree in '..\..\src\dzIdeExplorerMenuTree.pas' {f_MenuTree},
-  dzIdeExplorerFilterForm in '..\..\src\dzIdeExplorerFilterForm.pas' {f_Filter},
   dzIdeExplorerClassInformation in '..\..\src\dzIdeExplorerClassInformation.pas',
+  dzIdeExplorerExpert in '..\..\src\dzIdeExplorerExpert.pas',
+  dzIdeExplorerFilterForm in '..\..\src\dzIdeExplorerFilterForm.pas' {f_Filter},
+  dzIdeExplorerMainForm in '..\..\src\dzIdeExplorerMainForm.pas' {ExplorerForm},
+  dzIdeExplorerMenuTree in '..\..\src\dzIdeExplorerMenuTree.pas' {f_MenuTree},
+  dzIdeExplorerReg in '..\..\src\dzIdeExplorerReg.pas',
   dzIdeExplorerUtils in '..\..\src\dzIdeExplorerUtils.pas',
   dzIdeExplorerVCL in '..\..\src\dzIdeExplorerVCL.pas',
   dzIdeExplorerFMX in '..\..\src\dzIdeExplorerFMX.pas',
-  dzIdeExplorerMainForm in '..\..\src\dzIdeExplorerMainForm.pas' {ExplorerForm},
+  dzIdeExplorerBinarySearch in '..\..\src\dzIdeExplorerBinarySearch.pas',
+  dzIdeExplorerdzVclUtils in '..\..\src\dzIdeExplorerdzVclUtils.pas',
   dzIdeExplorerEventHook in '..\..\src\dzIdeExplorerEventHook.pas',
-  dzIdeExplorerdzVclUtils in '..\..\src\dzIdeExplorerdzVclUtils.pas';
+  dzIdeExplorerSearchForm in '..\..\src\dzIdeExplorerSearchForm.pas' {f_dzIdeExplorerSearch};
 
 end.
 

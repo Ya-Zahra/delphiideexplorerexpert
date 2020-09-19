@@ -1,4 +1,4 @@
-object f_IdeExplorerFilterForm: Tf_IdeExplorerFilterForm
+object f_dzIdeExplorerFilter: Tf_dzIdeExplorerFilter
   Left = 250
   Top = 108
   Caption = 'Filter'
@@ -71,8 +71,8 @@ object f_IdeExplorerFilterForm: Tf_IdeExplorerFilterForm
     Height = 125
     AutoSize = False
     Caption = 
-      'Controls are adjusted to form size at run time. (And this not is' +
-      ' hidden at runtime.)'
+      'Controls are adjusted to form size at run time. (And this is hid' +
+      'den at runtime.)'
     Visible = False
     WordWrap = True
   end
@@ -102,7 +102,7 @@ object f_IdeExplorerFilterForm: Tf_IdeExplorerFilterForm
     Left = 8
     Top = 24
     Width = 146
-    Height = 232
+    Height = 233
     Anchors = [akLeft, akTop, akBottom]
     ItemHeight = 13
     MultiSelect = True
@@ -114,7 +114,7 @@ object f_IdeExplorerFilterForm: Tf_IdeExplorerFilterForm
     Left = 192
     Top = 24
     Width = 145
-    Height = 232
+    Height = 233
     Anchors = [akLeft, akTop, akBottom]
     ItemHeight = 13
     MultiSelect = True

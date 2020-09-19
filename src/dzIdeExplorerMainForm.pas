@@ -30,10 +30,11 @@ uses
   ActnList,
   ActnMan,
   dzIdeExplorerClassInformation,
-  dzIdeExplorerEventHook;
+  dzIdeExplorerEventHook,
+  dzIdeExplorerSearchForm;
 
 type
-  TExplorerForm = class(TForm)
+  Tf_dzIdeExplorerMain = class(TForm)
     tv_Forms: TTreeView;
     im_Controls: TImageList;
     TheSplitter: TSplitter;
@@ -63,6 +64,8 @@ type
     pm_Parents: TPopupMenu;
     mi_CopyPath: TMenuItem;
     tim_CheckHook: TTimer;
+    b_Search: TButton;
+    procedure b_SearchClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure tv_FormsChange(Sender: TObject; Node: TTreeNode);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -92,6 +95,8 @@ type
     FVclForms: TTreeNode;
     FClassInfo: TClassInfoList;
     FValueHints: TStringList;
+    FSearchType: TSearchType;
+    FSearchText: string;
     procedure FillTree;
     procedure SelectFocused(_Force: Boolean);
     procedure HandleOnActiveControlChange(Sender: TObject);
@@ -133,7 +138,10 @@ uses
   dzIdeExplorerFilterForm,
   dzIdeExplorerMenuTree;
 
-constructor TExplorerForm.Create(_Owner: TComponent);
+resourcestring
+  StrSearchStringNotFound = 'Search string ''%s'' not found';
+
+constructor Tf_dzIdeExplorerMain.Create(_Owner: TComponent);
 var
   Reg: TRegIniFile;
   Section: string;
@@ -177,7 +185,7 @@ begin
 
 end;
 
-destructor TExplorerForm.Destroy;
+destructor Tf_dzIdeExplorerMain.Destroy;
 begin
   if Assigned(FActiveControlChangedHook) then
     UnhookScreenActiveControlChange(FActiveControlChangedHook);
@@ -186,7 +194,7 @@ begin
   inherited;
 end;
 
-procedure TExplorerForm.FormClose(Sender: TObject; var Action: TCloseAction);
+procedure Tf_dzIdeExplorerMain.FormClose(Sender: TObject; var Action: TCloseAction);
 var
   Reg: TRegIniFile;
   Section: string;
@@ -217,7 +225,7 @@ begin
   end;
 end;
 
-procedure TExplorerForm.FormShow(Sender: TObject);
+procedure Tf_dzIdeExplorerMain.FormShow(Sender: TObject);
 begin
   if Assigned(FActiveControlChangedHook) then
     UnhookScreenActiveControlChange(FActiveControlChangedHook);
@@ -225,17 +233,17 @@ begin
   FActiveControlChangedHook := HookScreenActiveControlChange(HandleOnActiveControlChange);
 end;
 
-procedure TExplorerForm.b_SelectActiveClick(Sender: TObject);
+procedure Tf_dzIdeExplorerMain.b_SelectActiveClick(Sender: TObject);
 begin
   SelectFocused(True);
 end;
 
-procedure TExplorerForm.b_UpdateClick(Sender: TObject);
+procedure Tf_dzIdeExplorerMain.b_UpdateClick(Sender: TObject);
 begin
   FillTree;
 end;
 
-procedure TExplorerForm.chk_FollowClick(Sender: TObject);
+procedure Tf_dzIdeExplorerMain.chk_FollowClick(Sender: TObject);
 begin
   FFollowFocusEnabled := chk_Follow.Checked;
   if FFollowFocusEnabled then begin
@@ -253,7 +261,7 @@ begin
 {$ENDIF}
 end;
 
-procedure TExplorerForm.WMEnable(var _Msg: TWMEnable);
+procedure Tf_dzIdeExplorerMain.WMEnable(var _Msg: TWMEnable);
 begin
   inherited;
   if not _Msg.Enabled and CheckModalLevel then
@@ -261,14 +269,15 @@ begin
 end;
 
 type
-  TMyFormClasses = array[0..2] of TClass;
+  TMyFormClasses = array[0..3] of TClass;
 const
   MY_FORM_CLASSES: TMyFormClasses = (
-    TExplorerForm,
-    Tf_IdeExplorerFilterForm,
-    Tf_IdeExplorerMenuTree);
+    Tf_dzIdeExplorerMain,
+    Tf_dzIdeExplorerFilter,
+    Tf_dzIdeExplorerMenuTree,
+    Tf_dzIdeExplorerSearch);
 
-procedure TExplorerForm.UpdateActiveDelphiForm;
+procedure Tf_dzIdeExplorerMain.UpdateActiveDelphiForm;
 var
   frm: TForm;
   i: Integer;
@@ -291,12 +300,12 @@ begin
     SelectFocused(False);
 end;
 
-procedure TExplorerForm.HandleOnActiveControlChange(Sender: TObject);
+procedure Tf_dzIdeExplorerMain.HandleOnActiveControlChange(Sender: TObject);
 begin
   UpdateActiveDelphiForm;
 end;
 
-procedure TExplorerForm.lv_PropertiesInfoTip(Sender: TObject; Item: TListItem; var InfoTip: string);
+procedure Tf_dzIdeExplorerMain.lv_PropertiesInfoTip(Sender: TObject; Item: TListItem; var InfoTip: string);
 var
   Idx: Integer;
 begin
@@ -309,7 +318,7 @@ begin
   InfoTip := FValueHints[Idx];
 end;
 
-procedure TExplorerForm.mi_ClickClick(Sender: TObject);
+procedure Tf_dzIdeExplorerMain.mi_ClickClick(Sender: TObject);
 var
   Node: TTreeNode;
   cmp: TComponent;
@@ -324,7 +333,7 @@ begin
 {$ENDIF ~nodzFmxSupport}
 end;
 
-procedure TExplorerForm.mi_CollapseClick(Sender: TObject);
+procedure Tf_dzIdeExplorerMain.mi_CollapseClick(Sender: TObject);
 var
   Node: TTreeNode;
 begin
@@ -334,7 +343,7 @@ begin
   Node.Collapse(True);
 end;
 
-procedure TExplorerForm.mi_CopyPathClick(Sender: TObject);
+procedure Tf_dzIdeExplorerMain.mi_CopyPathClick(Sender: TObject);
 var
   IndentStr: string;
 
@@ -356,7 +365,7 @@ begin
   Clipboard.AsText := s;
 end;
 
-procedure TExplorerForm.mi_ExpandallClick(Sender: TObject);
+procedure Tf_dzIdeExplorerMain.mi_ExpandallClick(Sender: TObject);
 var
   Node: TTreeNode;
 begin
@@ -366,7 +375,7 @@ begin
   Node.Expand(True);
 end;
 
-procedure TExplorerForm.mi_ShowClick(Sender: TObject);
+procedure Tf_dzIdeExplorerMain.mi_ShowClick(Sender: TObject);
 var
   Node: TTreeNode;
   cmp: TComponent;
@@ -381,7 +390,7 @@ begin
 {$ENDIF ~nodzFmxSupport}
 end;
 
-procedure TExplorerForm.pm_ControlsPopup(Sender: TObject);
+procedure Tf_dzIdeExplorerMain.pm_ControlsPopup(Sender: TObject);
 var
   Node: TTreeNode;
   cmp: TComponent;
@@ -405,13 +414,13 @@ begin
   end;
 end;
 
-procedure TExplorerForm.b_FilterClick(Sender: TObject);
+procedure Tf_dzIdeExplorerMain.b_FilterClick(Sender: TObject);
 begin
-  Tf_IdeExplorerFilterForm.Execute(Self, FClassInfo);
+  Tf_dzIdeExplorerFilter.Execute(Self, FClassInfo);
   FillTree;
 end;
 
-procedure TExplorerForm.FillTree;
+procedure Tf_dzIdeExplorerMain.FillTree;
 
   function AddRootChild(_Parent: TTreeNode; const _Caption: string): TTreeNode;
   begin
@@ -665,7 +674,7 @@ begin
   end;
 end;
 
-procedure TExplorerForm.SelectFocused(_Force: Boolean);
+procedure Tf_dzIdeExplorerMain.SelectFocused(_Force: Boolean);
 
   procedure SelectFocusedControl(_ActCtrl: TWinControl; _Parent: TTreeNode; var _Found: Boolean);
   var
@@ -761,7 +770,7 @@ begin
   end;
 end;
 
-procedure TExplorerForm.tim_CheckHookTimer(Sender: TObject);
+procedure Tf_dzIdeExplorerMain.tim_CheckHookTimer(Sender: TObject);
 begin
 {$IFDEF DELPHIX_RIO_UP}
   tim_CheckHook.Enabled := False;
@@ -785,7 +794,7 @@ begin
 {$ENDIF}
 end;
 
-procedure TExplorerForm.tv_FormsChange(Sender: TObject; Node: TTreeNode);
+procedure Tf_dzIdeExplorerMain.tv_FormsChange(Sender: TObject; Node: TTreeNode);
 begin
   TheStatusBar.SimpleText := GetFullNodeName(Node);
   UpdatePropertiesAndEvents(Node);
@@ -793,7 +802,7 @@ begin
   UpdateAdditional(Node);
 end;
 
-procedure TExplorerForm.UpdatePropertiesAndEvents(_Node: TTreeNode);
+procedure Tf_dzIdeExplorerMain.UpdatePropertiesAndEvents(_Node: TTreeNode);
 {$IFNDEF DelphiXE6_Up}
 type
   TSymbolName = ShortString;
@@ -929,7 +938,7 @@ begin
   end;
 end;
 
-procedure TExplorerForm.UpdateHierarchy(_Node: TTreeNode);
+procedure Tf_dzIdeExplorerMain.UpdateHierarchy(_Node: TTreeNode);
 var
   ClassRef: TClass;
   i: Integer;
@@ -965,7 +974,7 @@ begin
   end;
 end;
 
-procedure TExplorerForm.UpdateAdditional(_Node: TTreeNode);
+procedure Tf_dzIdeExplorerMain.UpdateAdditional(_Node: TTreeNode);
 var
   cmp: TComponent;
 begin
@@ -990,7 +999,7 @@ begin
   end;
 end;
 
-procedure TExplorerForm.UpdateParents(_Ctrl: TControl);
+procedure Tf_dzIdeExplorerMain.UpdateParents(_Ctrl: TControl);
 var
   PNode: TTreeNode;
   strList: TStringList;
@@ -1024,7 +1033,7 @@ begin
   end;
 end;
 
-procedure TExplorerForm.AddSubmenuItems(_ParentNode: TTreeNode; _Item: TMenuItem);
+procedure Tf_dzIdeExplorerMain.AddSubmenuItems(_ParentNode: TTreeNode; _Item: TMenuItem);
 var
   PNode: TTreeNode;
   i: Integer;
@@ -1037,7 +1046,7 @@ begin
   end;
 end;
 
-procedure TExplorerForm.UpdateMenu(_mnu: TMenu);
+procedure Tf_dzIdeExplorerMain.UpdateMenu(_mnu: TMenu);
 var
   PNode: TTreeNode;
 begin
@@ -1047,7 +1056,7 @@ begin
   PNode.Expand(False);
 end;
 
-procedure TExplorerForm.UpdateSubmenu(_mi: TMenuItem);
+procedure Tf_dzIdeExplorerMain.UpdateSubmenu(_mi: TMenuItem);
 var
   PNode: TTreeNode;
 begin
@@ -1065,7 +1074,51 @@ begin
     Result := '';
 end;
 
-procedure TExplorerForm.UpdateActionList(_lst: TActionList);
+procedure SplitNodeText(const _Text: string; out _ComponentName, _TypeName: string);
+var
+  p: Integer;
+begin
+  p := Pos(':', _Text);
+  if p>0 then begin
+    _ComponentName := Trim(LeftStr(_Text, p - 1));
+    _TypeName := Trim(Copy(_Text, p + 1, 255));
+  end;
+end;
+
+procedure Tf_dzIdeExplorerMain.b_SearchClick(Sender: TObject);
+var
+  Node: TTreeNode;
+  NodeText: string;
+  s: string;
+  SearchTextU: string;
+begin
+  Node := tv_Forms.Selected;
+  if Node = nil then
+    Exit; //==>
+
+  if not Tf_dzIdeExplorerSearch.Execute(Self, FSearchText, FSearchType) then
+    Exit; //==>
+
+  SearchTextU := Uppercase(FSearchText);
+  while Assigned(Node) do begin
+    if Pointer(Node.Data) <> nil then begin
+      case FSearchType of
+        stComponentName:
+          SplitNodeText(Node.Text, NodeText, s);
+        stTypeName:
+          SplitNodeText(Node.Text, s, NodeText);
+      end;
+      if Pos(SearchTextU, UpperCase(NodeText)) > 0 then begin
+        tv_Forms.Select(Node);
+        Exit; //==>
+      end;
+    end;
+    Node := Node.GetNext;
+  end;
+  ShowMessageFmt(StrSearchStringNotFound, [FSearchText]);
+end;
+
+procedure Tf_dzIdeExplorerMain.UpdateActionList(_lst: TActionList);
 var
   PNode: TTreeNode;
   i: Integer;
@@ -1082,7 +1135,7 @@ begin
   PNode.Expand(False);
 end;
 
-procedure TExplorerForm.UpdateActionManager(_mgr: TActionManager);
+procedure Tf_dzIdeExplorerMain.UpdateActionManager(_mgr: TActionManager);
 var
   PNode: TTreeNode;
   i: Integer;

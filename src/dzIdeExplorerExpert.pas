@@ -34,7 +34,7 @@ type
   private
     FExplorerAction: TAction;
     FExplorerMenuItem: TMenuItem;
-    FExplorerForm: TExplorerForm;
+    FExplorerForm: Tf_dzIdeExplorerMain;
 {$IFDEF DELPHI2005_UP}
     FAboutPluginIndex: Integer;
 {$ENDIF DELPHI2005_UP}
@@ -160,7 +160,7 @@ end;
 procedure TDGHIDEExplorer.Execute;
 begin
   if not Assigned(FExplorerForm) then
-    FExplorerForm := TExplorerForm.Create(nil);
+    FExplorerForm := Tf_dzIdeExplorerMain.Create(nil);
   FExplorerForm.Show;
 end;
 
