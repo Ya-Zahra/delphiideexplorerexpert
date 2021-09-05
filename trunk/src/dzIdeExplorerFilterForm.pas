@@ -54,6 +54,8 @@ implementation
 uses
   dzIdeExplorerUtils;
 
+{ Tf_dzIdeExplorerFilter }
+
 class function Tf_dzIdeExplorerFilter.Execute(_Owner: TWinControl; _Items: TClassInfoList): boolean;
 var
   frm: Tf_dzIdeExplorerFilter;
