@@ -2,12 +2,12 @@
     <PropertyGroup>
         <Base>True</Base>
         <AppType>Package</AppType>
-        <Config Condition="'$(Config)'==''">Debug</Config>
+        <Config Condition="'$(Config)'==''">Release</Config>
         <FrameworkType>VCL</FrameworkType>
         <MainSource>DelphiIDEExplorer.dpk</MainSource>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
         <ProjectGuid>{C034F1BD-0202-4EBF-B5D1-A974E3AA51A8}</ProjectGuid>
-        <ProjectVersion>19.0</ProjectVersion>
+        <ProjectVersion>19.2</ProjectVersion>
         <TargetedPlatforms>1</TargetedPlatforms>
     </PropertyGroup>
     <PropertyGroup Condition="('$(Platform)'=='Win64' and '$(Base)'=='true') or '$(Base_Win64)'!=''">
@@ -50,7 +50,7 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
         <SanitizedProjectName>DelphiIDEExplorer</SanitizedProjectName>
-        <DCC_DcuOutput>.\dcu</DCC_DcuOutput>
+        <DCC_DcuOutput>.\dcu\$(Platform)\$(Config)</DCC_DcuOutput>
         <DCC_DebugInformation>1</DCC_DebugInformation>
         <DCC_Description>dummzeuch.de Delphi IDE Explorer</DCC_Description>
         <DCC_E>false</DCC_E>
@@ -60,6 +60,7 @@
         <DCC_ImageBase>00400000</DCC_ImageBase>
         <DCC_IntegerOverflowCheck>true</DCC_IntegerOverflowCheck>
         <DCC_K>false</DCC_K>
+        <DCC_MapFile>3</DCC_MapFile>
         <DCC_N>false</DCC_N>
         <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Winapi;Vcl;System.Win;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
         <DCC_OutputNeverBuildDcps>true</DCC_OutputNeverBuildDcps>
@@ -108,30 +109,31 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
+        <DCCReference Include="Rtl.dcp"/>
         <DCCReference Include="Vcl.dcp"/>
-        <DCCReference Include="FMX.dcp"/>
+        <DCCReference Include="Fmx.dcp"/>
         <DCCReference Include="DesignIde.dcp"/>
-        <DCCReference Include="..\..\src\dzIdeExplorerExpert.pas"/>
-        <DCCReference Include="..\..\src\dzIdeExplorerReg.pas"/>
-        <DCCReference Include="..\..\src\dzIdeExplorerMenuTree.pas">
-            <Form>f_IdeExplorerMenuTree</Form>
-        </DCCReference>
-        <DCCReference Include="..\..\src\dzIdeExplorerFilterForm.pas">
-            <Form>f_IdeExplorerFilterForm</Form>
-        </DCCReference>
+        <DCCReference Include="..\..\src\dzIdeExplorerBinarySearch.pas"/>
         <DCCReference Include="..\..\src\dzIdeExplorerClassInformation.pas"/>
+        <DCCReference Include="..\..\src\dzIdeExplorerdzVclUtils.pas"/>
+        <DCCReference Include="..\..\src\dzIdeExplorerEventHook.pas"/>
+        <DCCReference Include="..\..\src\dzIdeExplorerExpert.pas"/>
+        <DCCReference Include="..\..\src\dzIdeExplorerFilterForm.pas">
+            <Form>f_dzIdeExplorerFilterForm</Form>
+        </DCCReference>
+        <DCCReference Include="..\..\src\dzIdeExplorerFMX.pas"/>
         <DCCReference Include="..\..\src\dzIdeExplorerMainForm.pas">
-            <Form>ExplorerForm</Form>
+            <Form>f_dzIdeExplorerMain</Form>
+        </DCCReference>
+        <DCCReference Include="..\..\src\dzIdeExplorerMenuTree.pas">
+            <Form>f_dzIdeExplorerMenuTree</Form>
+        </DCCReference>
+        <DCCReference Include="..\..\src\dzIdeExplorerReg.pas"/>
+        <DCCReference Include="..\..\src\dzIdeExplorerSearchForm.pas">
+            <Form>f_dzIdeExplorerSearch</Form>
         </DCCReference>
         <DCCReference Include="..\..\src\dzIdeExplorerUtils.pas"/>
         <DCCReference Include="..\..\src\dzIdeExplorerVCL.pas"/>
-        <DCCReference Include="..\..\src\dzIdeExplorerFMX.pas"/>
-        <DCCReference Include="..\..\src\dzIdeExplorerdzVclUtils.pas"/>
-        <DCCReference Include="..\..\src\dzIdeExplorerEventHook.pas"/>
-        <None Include="..\..\src\jedi.inc"/>
-        <RcCompile Include="..\..\src\SplashscreenIcon.rc">
-            <Form>SplashscreenIcon.res</Form>
-        </RcCompile>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
