@@ -31,17 +31,17 @@ package DelphiIDEExplorer;
 {$IMPLICITBUILD OFF}
 
 requires
-  rtl,
+  Rtl,
   DesignIde,
   Vcl,
-  fmx;
+  Fmx;
 
 contains
   dzIdeExplorerClassInformation in '..\..\src\dzIdeExplorerClassInformation.pas',
   dzIdeExplorerExpert in '..\..\src\dzIdeExplorerExpert.pas',
-  dzIdeExplorerFilterForm in '..\..\src\dzIdeExplorerFilterForm.pas' {f_Filter},
-  dzIdeExplorerMainForm in '..\..\src\dzIdeExplorerMainForm.pas' {ExplorerForm},
-  dzIdeExplorerMenuTree in '..\..\src\dzIdeExplorerMenuTree.pas' {f_MenuTree},
+  dzIdeExplorerFilterForm in '..\..\src\dzIdeExplorerFilterForm.pas' {f_dzIdeExplorerFilter},
+  dzIdeExplorerMainForm in '..\..\src\dzIdeExplorerMainForm.pas' {f_dzIdeExplorerMainForm},
+  dzIdeExplorerMenuTree in '..\..\src\dzIdeExplorerMenuTree.pas' {f_dzIdeExplorerMenuTree},
   dzIdeExplorerReg in '..\..\src\dzIdeExplorerReg.pas',
   dzIdeExplorerUtils in '..\..\src\dzIdeExplorerUtils.pas',
   dzIdeExplorerVCL in '..\..\src\dzIdeExplorerVCL.pas',
