@@ -34,7 +34,7 @@ implementation
 uses
   ActnList;
 
-{ Tf_MenuTree }
+{ Tf_dzIdeExplorerMenuTree }
 
 constructor Tf_dzIdeExplorerMenuTree.Create(_Owner: TComponent);
 var
