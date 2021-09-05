@@ -5,17 +5,17 @@ package DelphiIDEExplorer;
 {$ALIGN 8}
 {$ASSERTIONS ON}
 {$BOOLEVAL OFF}
-{$DEBUGINFO ON}
+{$DEBUGINFO OFF}
 {$EXTENDEDSYNTAX ON}
 {$IMPORTEDDATA ON}
 {$IOCHECKS OFF}
-{$LOCALSYMBOLS ON}
+{$LOCALSYMBOLS OFF}
 {$LONGSTRINGS ON}
 {$OPENSTRINGS ON}
-{$OPTIMIZATION OFF}
+{$OPTIMIZATION ON}
 {$OVERFLOWCHECKS ON}
 {$RANGECHECKS ON}
-{$REFERENCEINFO ON}
+{$REFERENCEINFO OFF}
 {$SAFEDIVIDE OFF}
 {$STACKFRAMES ON}
 {$TYPEDADDRESS OFF}
@@ -23,7 +23,7 @@ package DelphiIDEExplorer;
 {$WRITEABLECONST ON}
 {$MINENUMSIZE 1}
 {$IMAGEBASE $400000}
-{$DEFINE DEBUG}
+{$DEFINE RELEASE}
 {$ENDIF IMPLICITBUILDING}
 {$DESCRIPTION 'dummzeuch.de Delphi IDE Explorer'}
 {$LIBSUFFIX '270'}
@@ -31,25 +31,25 @@ package DelphiIDEExplorer;
 {$IMPLICITBUILD OFF}
 
 requires
-  rtl,
+  Rtl,
   DesignIde,
   Vcl,
-  fmx;
+  Fmx;
 
 contains
-  dzIdeExplorerClassInformation in '..\..\src\dzIdeExplorerClassInformation.pas',
-  dzIdeExplorerExpert in '..\..\src\dzIdeExplorerExpert.pas',
-  dzIdeExplorerFilterForm in '..\..\src\dzIdeExplorerFilterForm.pas' {f_Filter},
-  dzIdeExplorerMainForm in '..\..\src\dzIdeExplorerMainForm.pas' {ExplorerForm},
-  dzIdeExplorerMenuTree in '..\..\src\dzIdeExplorerMenuTree.pas' {f_MenuTree},
-  dzIdeExplorerReg in '..\..\src\dzIdeExplorerReg.pas',
-  dzIdeExplorerUtils in '..\..\src\dzIdeExplorerUtils.pas',
-  dzIdeExplorerVCL in '..\..\src\dzIdeExplorerVCL.pas',
-  dzIdeExplorerFMX in '..\..\src\dzIdeExplorerFMX.pas',
   dzIdeExplorerBinarySearch in '..\..\src\dzIdeExplorerBinarySearch.pas',
+  dzIdeExplorerClassInformation in '..\..\src\dzIdeExplorerClassInformation.pas',
   dzIdeExplorerdzVclUtils in '..\..\src\dzIdeExplorerdzVclUtils.pas',
   dzIdeExplorerEventHook in '..\..\src\dzIdeExplorerEventHook.pas',
-  dzIdeExplorerSearchForm in '..\..\src\dzIdeExplorerSearchForm.pas' {f_dzIdeExplorerSearch};
+  dzIdeExplorerExpert in '..\..\src\dzIdeExplorerExpert.pas',
+  dzIdeExplorerFilterForm in '..\..\src\dzIdeExplorerFilterForm.pas' {f_dzIdeExplorerFilterForm},
+  dzIdeExplorerFMX in '..\..\src\dzIdeExplorerFMX.pas',
+  dzIdeExplorerMainForm in '..\..\src\dzIdeExplorerMainForm.pas' {f_dzIdeExplorerMain},
+  dzIdeExplorerMenuTree in '..\..\src\dzIdeExplorerMenuTree.pas' {f_dzIdeExplorerMenuTree},
+  dzIdeExplorerReg in '..\..\src\dzIdeExplorerReg.pas',
+  dzIdeExplorerSearchForm in '..\..\src\dzIdeExplorerSearchForm.pas' {f_dzIdeExplorerSearch},
+  dzIdeExplorerUtils in '..\..\src\dzIdeExplorerUtils.pas',
+  dzIdeExplorerVCL in '..\..\src\dzIdeExplorerVCL.pas';
 
 end.
 
